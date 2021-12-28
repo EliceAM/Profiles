@@ -34,3 +34,4 @@ dns:
     - '*.blzstatic.cn'
     - '*.battle.net'
     - '*.qq.com'
+    - 'qq.com'
