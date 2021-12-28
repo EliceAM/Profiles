@@ -3,11 +3,21 @@ port: 7890
 socks-port: 7891
 mixed-port: 7893
 allow-lan: true
+bind-address: '*'
 mode: rule
 log-level: silent
+ipv6: false
 external-controller: 127.0.0.1:9090
 experimental:
   ignore-resolve-fail: true
+hosts:
+  # Firebase Cloud Messaging
+  'mtalk.google.com': 108.177.125.188
+  # Google Dl
+  'dl.google.com': 180.163.151.161
+  'dl.l.google.com': 180.163.151.161
+profile:
+  store-selected: false
 dns:
   enable: true
   listen: 0.0.0.0:53
