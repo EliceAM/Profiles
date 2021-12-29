@@ -45,4 +45,5 @@ dns:
     - '*.battle.net'
     - '*.qq.com'
     - 'qq.com'
+    - '*.wanmei.com'
     - '*.wmpvp.com'
