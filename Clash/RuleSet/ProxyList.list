@@ -6,7 +6,7 @@ DOMAIN-SUFFIX,api.dler.io
 DOMAIN-SUFFIX,2dfan.com
 DOMAIN-SUFFIX,vndb.org
 DOMAIN-SUFFIX,gmgard.com
-DOMAIN-KEYWORD,zodgame
+DOMAIN-KEYWORD,zodgame.
 DOMAIN-KEYWORD,south-plus
 
 # ACG
@@ -14,8 +14,8 @@ DOMAIN-SUFFIX,saucenao.com
 DOMAIN-SUFFIX,yandex.com
 DOMAIN-SUFFIX,yande.re
 DOMAIN-SUFFIX,konachan.com
-DOMAIN-KEYWORD,danbooru
-DOMAIN-KEYWORD,gelbooru
+DOMAIN-KEYWORD,danbooru.
+DOMAIN-KEYWORD,gelbooru.
 
 DOMAIN-SUFFIX,vol.moe
 DOMAIN-SUFFIX,mox.moe
@@ -34,5 +34,5 @@ DOMAIN-SUFFIX,bandcamp.com
 DOMAIN-SUFFIX,jable.tv
 DOMAIN-SUFFIX,javdb.com
 DOMAIN-SUFFIX,xsijishe.com
-DOMAIN-KEYWORD,avmoo
-DOMAIN-KEYWORD,btsow
+DOMAIN-KEYWORD,avmoo.
+DOMAIN-KEYWORD,btsow.
