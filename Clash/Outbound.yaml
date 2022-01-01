@@ -21,14 +21,21 @@ profile:
 dns:
   enable: true
   listen: 0.0.0.0:53
-  enhanced-mode: fake-ip
+  enhanced-mode: redir-host
   fake-ip-range: 198.18.0.1/16
   default-nameserver:
     - 221.176.88.95
     - 211.138.164.6
   nameserver:
-    - https://doh.pub/dns-query
+    - tls://dns.pub
+    - https://dns.pub/dns-query
+    - tls://dns.alidns.com
     - https://dns.alidns.com/dns-query
+  fallback:
+    - tls://dns.google
+    - https://dns.google/dns-query
+    - tls://dns11.quad9.net
+    - https://dns11.quad9.net/dns-query
   fake-ip-filter:
     - '*.lan'
     - localhost.ptlogin2.qq.com
