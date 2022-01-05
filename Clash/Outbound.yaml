@@ -1,6 +1,8 @@
 # 只用于OpenClash远端服务配置，使用前注意修改 default-nameserver 为自己本地的运营商DNS
 port: 7890
 socks-port: 7891
+redir-port: 7892
+tproxy-port: 7895
 
 # 允许局域网的连接（可用来共享代理）
 allow-lan: true
@@ -29,9 +31,9 @@ hosts:
 dns:
   enable: true
   listen: 0.0.0.0:53
-  ipv6: true # 当此选项为 false 时, AAAA 请求将返回空
+  ipv6: false # 当此选项为 false 时, AAAA 请求将返回空
   # 以下填写的 DNS 服务器将会被用来解析 DNS 服务的域名
-  # 仅填写 本地的运营商的DNS 
+  # 仅填写 本地的运营商的 DNS 服务器
   default-nameserver:
     - 221.176.88.95
     - 211.138.164.6
@@ -184,7 +186,7 @@ dns:
       - '+.googlevideo.com'
 
 tun:
-  enable: false #如果需要启用 TUN 模式，请设置为 true
+  enable: true #如果需要启用 TUN 模式，请设置为 true
   stack: system # 或 gvisor
   macOS-auto-route: true
   macOS-auto-detect-interface: true
