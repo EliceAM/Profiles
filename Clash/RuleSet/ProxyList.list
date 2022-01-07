@@ -1,14 +1,12 @@
 # SUB
 DOMAIN-SUFFIX,subconverter.herokuapp.com
 DOMAIN-SUFFIX,api.dler.io
-
 # BBS
 DOMAIN-SUFFIX,2dfan.com
 DOMAIN-SUFFIX,vndb.org
 DOMAIN-SUFFIX,gmgard.com
 DOMAIN-KEYWORD,zodgame.
 DOMAIN-KEYWORD,south-plus
-
 # ACG
 DOMAIN-SUFFIX,saucenao.com
 DOMAIN-SUFFIX,yandex.com
@@ -16,20 +14,16 @@ DOMAIN-SUFFIX,yande.re
 DOMAIN-SUFFIX,konachan.com
 DOMAIN-KEYWORD,danbooru
 DOMAIN-KEYWORD,gelbooru
-
 DOMAIN-SUFFIX,vol.moe
 DOMAIN-SUFFIX,mox.moe
 DOMAIN-SUFFIX,dmhy.org
 DOMAIN-KEYWORD,nyaa.si
-
 DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,nhentai.net
 DOMAIN-SUFFIX,i.imgur.com
 DOMAIN-KEYWORD,iwara.tv
-
 DOMAIN-SUFFIX,nexusmods.com
 DOMAIN-SUFFIX,bandcamp.com
-
 # NSFW
 DOMAIN-SUFFIX,jable.tv
 DOMAIN-SUFFIX,javdb.com
