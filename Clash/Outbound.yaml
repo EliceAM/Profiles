@@ -148,7 +148,7 @@ dns:
   # 当解析得到的 IP 地址的地理位置不是 CN 时，clash 将会选用 fallback 中 DNS 服务器的解析结果。
   fallback:
     - tls://dns.google
-    - tls://dns11.quad9.net
+    - tls://1dot1dot1dot1.cloudflare-dns.com
     
   # 如果使用 nameserver 列表中的服务器解析的 IP 地址在下方列表中的子网中，则它们被认为是无效的，
   # Clash 会选用 fallback 列表中配置 DNS 服务器解析得到的结果。
