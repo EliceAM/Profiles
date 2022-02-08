@@ -4,8 +4,8 @@ DOMAIN-SUFFIX,api.dler.io
 # BBS
 DOMAIN-SUFFIX,2dfan.com
 DOMAIN-SUFFIX,vndb.org
-DOMAIN-SUFFIX,gmgard.com
-DOMAIN-KEYWORD,zodgame.
+DOMAIN-KEYWORD,gmgard
+DOMAIN-KEYWORD,zodgame
 DOMAIN-KEYWORD,south-plus
 # ACG
 DOMAIN-SUFFIX,saucenao.com
@@ -22,6 +22,7 @@ DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,nhentai.net
 DOMAIN-SUFFIX,i.imgur.com
 DOMAIN-KEYWORD,iwara.tv
+DOMAIN-SUFFIX,hmoe11.net
 DOMAIN-SUFFIX,nexusmods.com
 DOMAIN-SUFFIX,bandcamp.com
 # NSFW
