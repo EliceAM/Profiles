@@ -12,8 +12,11 @@ bind-address: "*"
 # 192.168.122.11                绑定一个的 IPv4 地址
 # "[aaaa::a8aa:ff:fe09:57d8]"   绑定一个 IPv6 地址
 
+# Clash 路由工作模式
+# 规则模式：rule（规则） / global（全局代理）/ direct（全局直连）
 mode: rule
 
+# Clash 默认将日志输出至 STDOUT
 # 设置日志输出级别 (默认级别：silent，即不输出任何内容，以避免因日志内容过大而导致程序内存溢出）。
 # 5 个级别：silent / info / warning / error / debug。级别越高日志输出量越大，越倾向于调试，若需要请自行开启。
 log-level: silent
@@ -135,7 +138,6 @@ dns:
     - '*.finalfantasyxiv.com'
     - '*.ffxiv.com'
     - '*.mcdn.bilivideo.cn'
-    - '*.wmpvp.com'
     
   # 支持 UDP / TCP / DoT / DoH 协议的 DNS 服务，可以指明具体的连接端口号。
   # 所有 DNS 请求将会直接发送到服务器，不经过任何代理。
