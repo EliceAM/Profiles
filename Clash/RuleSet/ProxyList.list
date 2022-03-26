@@ -20,6 +20,8 @@ DOMAIN-SUFFIX,dmhy.org
 DOMAIN-KEYWORD,nyaa.si
 DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,nhentai.net
+DOMAIN-SUFFIX,e-hentai.org
+DOMAIN-SUFFIX,exhentai.org
 DOMAIN-SUFFIX,i.imgur.com
 DOMAIN-KEYWORD,iwara.tv
 DOMAIN-SUFFIX,hmoe11.net
@@ -27,6 +29,7 @@ DOMAIN-SUFFIX,nexusmods.com
 DOMAIN-SUFFIX,bandcamp.com
 DOMAIN-SUFFIX,dlsite.com
 DOMAIN-SUFFIX,byrut.org
+
 # NSFW
 DOMAIN-SUFFIX,jable.tv
 DOMAIN-SUFFIX,javdb.com
