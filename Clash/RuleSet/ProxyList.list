@@ -1,13 +1,9 @@
 # SUB
 DOMAIN-SUFFIX,subconverter.herokuapp.com
 DOMAIN-SUFFIX,api.dler.io
-# BBS
-DOMAIN-SUFFIX,2dfan.com
-DOMAIN-SUFFIX,vndb.org
-DOMAIN-KEYWORD,gmgard
-DOMAIN-KEYWORD,zodgame
-DOMAIN-KEYWORD,south-plus
+
 # ACG
+DOMAIN-KEYWORD,south-plus
 DOMAIN-SUFFIX,saucenao.com
 DOMAIN-SUFFIX,yandex.com
 DOMAIN-SUFFIX,yande.re
@@ -25,6 +21,9 @@ DOMAIN-SUFFIX,exhentai.org
 DOMAIN-SUFFIX,i.imgur.com
 DOMAIN-KEYWORD,iwara.tv
 DOMAIN-SUFFIX,hmoe11.net
+
+# Other
+DOMAIN-KEYWORD,south-plus
 DOMAIN-SUFFIX,nexusmods.com
 DOMAIN-SUFFIX,bandcamp.com
 DOMAIN-SUFFIX,dlsite.com
