@@ -2,6 +2,16 @@
 DOMAIN-SUFFIX,subconverter.herokuapp.com
 DOMAIN-SUFFIX,api.dler.io
 
+# Download
+DOMAIN-KEYWORD,aria2
+DOMAIN-KEYWORD,thunder
+DOMAIN-KEYWORD,xlliveud
+DOMAIN-KEYWORD,xunlei
+DOMAIN-KEYWORD,yunpan
+DOMAIN-KEYWORD,announce
+DOMAIN-KEYWORD,torrent
+DOMAIN-KEYWORD,tracker
+
 # ACG
 DOMAIN-KEYWORD,south-plus
 DOMAIN-SUFFIX,saucenao.com
