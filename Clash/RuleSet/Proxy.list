@@ -23,6 +23,7 @@ DOMAIN-KEYWORD,nyaa.si
 DOMAIN-SUFFIX,nhentai.net
 DOMAIN-SUFFIX,e-hentai.org
 DOMAIN-SUFFIX,exhentai.org
+DOMAIN-SUFFIX,ehgt.org
 DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,motherlessmedia.com
 DOMAIN-SUFFIX,sb-cd.com
@@ -34,6 +35,7 @@ DOMAIN-KEYWORD,zodgame
 DOMAIN-SUFFIX,hmoe11.net
 DOMAIN-KEYWORD,south-plus
 DOMAIN-SUFFIX,anime-sharing.com
+
 # Other
 DOMAIN-KEYWORD,south-plus
 DOMAIN-SUFFIX,ptt.cc
