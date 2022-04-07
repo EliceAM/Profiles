@@ -16,9 +16,6 @@ DOMAIN-SUFFIX,mail.me.com
 ruleset=DIRECT,[]DOMAIN-SUFFIX,lowiro.com
 
 # Hnair
-ruleset=DIRECT,[]DOMAIN-SUFFIX,10044.cn
-ruleset=DIRECT,[]DOMAIN-SUFFIX,hainanairlines.com
-ruleset=DIRECT,[]DOMAIN-SUFFIX,hnacargo.com
 ruleset=DIRECT,[]DOMAIN-SUFFIX,hnair.com
 ruleset=DIRECT,[]DOMAIN-SUFFIX,hnair.net
 ruleset=DIRECT,[]DOMAIN-KEYWORD,hnagroup
