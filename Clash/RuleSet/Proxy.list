@@ -20,11 +20,14 @@ DOMAIN-SUFFIX,eyny.com
 DOMAIN-SUFFIX,mikocon.com
 DOMAIN-KEYWORD,nyaa.si
 
-DOMAIN-SUFFIX,nhentai.net
 DOMAIN-SUFFIX,e-hentai.org
-DOMAIN-SUFFIX,exhentai.org
 DOMAIN-SUFFIX,ehgt.org
-DOMAIN-SUFFIX,lencr.org
+DOMAIN-SUFFIX,ehwiki.org
+DOMAIN-SUFFIX,exhentai.org
+DOMAIN-SUFFIX,hath.network
+DOMAIN-SUFFIX,hentaiverse.org
+
+DOMAIN-SUFFIX,nhentai.net
 DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,motherlessmedia.com
 DOMAIN-SUFFIX,sb-cd.com
