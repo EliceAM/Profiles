@@ -4,7 +4,16 @@ DOMAIN-SUFFIX,api.dler.io
 DOMAIN-SUFFIX,catnet.uk
 DOMAIN-SUFFIX,bywave.art
 
-# ACG
+# ACG BBS
+DOMAIN-SUFFIX,gmgard.com
+DOMAIN-KEYWORD,south-plus
+DOMAIN-KEYWORD,level-plus
+DOMAIN-SUFFIX,hmoe11.net
+DOMAIN-SUFFIX,acgbox.link
+DOMAIN-SUFFIX,eyny.com
+DOMAIN-SUFFIX,mikocon.com
+
+# Illustration
 DOMAIN-SUFFIX,saucenao.com
 DOMAIN-SUFFIX,yandex.com
 DOMAIN-SUFFIX,yande.re
@@ -12,14 +21,13 @@ DOMAIN-SUFFIX,konachan.com
 DOMAIN-KEYWORD,danbooru
 DOMAIN-KEYWORD,gelbooru
 
+# Manga
 DOMAIN-SUFFIX,vol.moe
 DOMAIN-SUFFIX,mox.moe
 DOMAIN-SUFFIX,dmhy.org
-DOMAIN-SUFFIX,acgbox.link
-DOMAIN-SUFFIX,eyny.com
-DOMAIN-SUFFIX,mikocon.com
-DOMAIN-KEYWORD,nyaa.si
+DOMAIN-SUFFIX,nhentai.net
 
+# EHgallery
 DOMAIN-SUFFIX,e-hentai.org
 DOMAIN-SUFFIX,ehgt.org
 DOMAIN-SUFFIX,ehwiki.org
@@ -29,34 +37,40 @@ DOMAIN-SUFFIX,hentaiverse.org
 DOMAIN-SUFFIX,lencr.org
 DOMAIN-SUFFIX,hath.network
 
-DOMAIN-SUFFIX,nhentai.net
+# Music
+DOMAIN-SUFFIX,bandcamp.com
+DOMAIN-SUFFIX,doujinstyle.com
+DOMAIN-SUFFIX,mikudb.moe
+DOMAIN-SUFFIX,anime-sharing.com
+
+# Anime
 DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,motherlessmedia.com
 DOMAIN-SUFFIX,sb-cd.com
 DOMAIN-KEYWORD,iwara.tv
 DOMAIN-SUFFIX,i.imgur.com
-DOMAIN-SUFFIX,2dfan.com
-DOMAIN-SUFFIX,gmgard.com
-DOMAIN-KEYWORD,zodgame
-DOMAIN-SUFFIX,hmoe11.net
-DOMAIN-KEYWORD,south-plus
-DOMAIN-SUFFIX,anime-sharing.com
 
-# Other
-DOMAIN-KEYWORD,south-plus
-DOMAIN-SUFFIX,ptt.cc
+# Game
+DOMAIN-SUFFIX,2dfan.com
+DOMAIN-KEYWORD,zodgame
 DOMAIN-SUFFIX,nexusmods.com
-DOMAIN-SUFFIX,bandcamp.com
-DOMAIN-SUFFIX,dlsite.com
 DOMAIN-SUFFIX,byrut.org
 
+# Cos
+DOMAIN-SUFFIX,cosindex.251.sh
+DOMAIN-SUFFIX,cosersets.com
+
+# Other
+DOMAIN-SUFFIX,dlsite.com
+DOMAIN-KEYWORD,nyaa.si
+DOMAIN-SUFFIX,ptt.cc
+
 # NSFW
+DOMAIN-SUFFIX,tellme.pw
+DOMAIN-KEYWORD,avmoo
+DOMAIN-KEYWORD,btsow
 DOMAIN-SUFFIX,jable.tv
 DOMAIN-SUFFIX,javdb.com
 DOMAIN-SUFFIX,xsijishe.com
 DOMAIN-SUFFIX,rewrfsrewr.xyz
-DOMAIN-SUFFIX,cosindex.251.sh
-DOMAIN-SUFFIX,cosersets.com
-DOMAIN-SUFFIX,tellme.pw
-DOMAIN-KEYWORD,avmoo
-DOMAIN-KEYWORD,btsow
+
