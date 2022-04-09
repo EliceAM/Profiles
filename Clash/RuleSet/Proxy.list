@@ -51,10 +51,11 @@ DOMAIN-KEYWORD,iwara.tv
 DOMAIN-SUFFIX,i.imgur.com
 
 # Game
-DOMAIN-SUFFIX,2dfan.com
 DOMAIN-KEYWORD,zodgame
 DOMAIN-SUFFIX,nexusmods.com
 DOMAIN-SUFFIX,byrut.org
+DOMAIN-SUFFIX,2dfan.com
+DOMAIN-SUFFIX,img.achost.top
 
 # Cos
 DOMAIN-SUFFIX,cosindex.251.sh
