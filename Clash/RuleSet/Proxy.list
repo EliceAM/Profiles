@@ -5,7 +5,6 @@ DOMAIN-SUFFIX,catnet.uk
 DOMAIN-SUFFIX,bywave.art
 
 # ACG BBS
-DOMAIN-SUFFIX,bangumi.moe
 DOMAIN-SUFFIX,gmgard.com
 DOMAIN-KEYWORD,south-plus
 DOMAIN-KEYWORD,level-plus
@@ -25,7 +24,6 @@ DOMAIN-KEYWORD,gelbooru
 # Manga
 DOMAIN-SUFFIX,vol.moe
 DOMAIN-SUFFIX,mox.moe
-DOMAIN-SUFFIX,dmhy.org
 DOMAIN-SUFFIX,nhentai.net
 
 # EHgallery
@@ -45,6 +43,9 @@ DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,anime-sharing.com
 
 # Anime
+DOMAIN-SUFFIX,bangumi.moe
+DOMAIN-SUFFIX,dmhy.org
+DOMAIN-SUFFIX,share.dmhy.org
 DOMAIN-SUFFIX,hanime1.me
 DOMAIN-SUFFIX,motherlessmedia.com
 DOMAIN-SUFFIX,sb-cd.com
