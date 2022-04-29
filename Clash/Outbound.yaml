@@ -39,7 +39,7 @@ dns:
   ipv6: false
 
   # 以下填写的 DNS 服务器将会被用来解析 DNS 服务的域名
-  # 仅填写 本地 DNS 服务器的 IP 地址
+  # 仅填写 DNS 服务器的 IP 地址
   default-nameserver:
     - 119.29.29.29
     - 114.114.114.114
