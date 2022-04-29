@@ -131,8 +131,6 @@ dns:
     ## STUN Server
     - 'stun.*.*'
     - 'stun.*.*.*'
-
-
     ## Bilibili CDN
     - '*.mcdn.bilivideo.cn'
 
@@ -140,19 +138,12 @@ dns:
   # 所有 DNS 请求将会直接发送到服务器，不经过任何代理。
   # Clash 会使用最先获得的解析记录回复 DNS 请求
   nameserver:
-
+    - 221.176.88.95
+    - 211.138.164.6
   # 当 fallback 参数被配置时, DNS 请求将同时发送至上方 nameserver 列表和下方 fallback 列表中配置的所有 DNS 服务器.
   # 当解析得到的 IP 地址的地理位置不是 CN 时，clash 将会选用 fallback 中 DNS 服务器的解析结果。
   fallback:
     - tls://1.1.1.1:853
     - tls://8.8.8.8:853
 
-  fallback-filter:
-    geoip: false
-    ipcidr:
-      - 240.0.0.0/4
-      - 0.0.0.0/32
-    # domain:
-    #   - '+.google.com'
-    #   - '+.facebook.com'
-    #   - '+.youtube.com'
+
