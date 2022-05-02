@@ -148,10 +148,3 @@ dns:
       - '+.githubusercontent.com'
       - '+.googlevideo.com'
 
-tun:
-  enable: true
-  stack: system
-  auto-route: false
-  auto-detect-interface: false
-  dns-hijack:
-    - tcp://any:53
