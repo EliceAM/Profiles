@@ -8,45 +8,26 @@ allow-lan: true
 bind-address: "*"
 mode: rule
 log-level: silent
-
-# clash 的 RESTful API 监听地址
-external-controller: 127.0.0.1:9090
-
+external-controller: 0.0.0.0:9090
 hosts:
-# '*.clash.dev': 127.0.0.1
-# '.dev': 127.0.0.1
-# 'alpha.clash.dev': '::1'
 
-# DNS 服务器配置(可选；若不配置，程序内置的 DNS 服务会被关闭)
 dns:
   enable: true
   listen: 0.0.0.0:53
   ipv6: false
-
-  # 以下填写的 DNS 服务器将会被用来解析 DNS 服务的域名
-  # 仅填写 DNS 服务器的 IP 地址
-  default-nameserver:
-    - 119.29.29.29
-    - 223.5.5.5
   enhanced-mode: fake-ip
-  fake-ip-range: 198.18.0.1/16 # Fake IP 地址池 (CIDR 形式)
-  # use-hosts: true # 查询 hosts 并返回 IP 记录
-
-  # 在以下列表的域名将不会被解析为 fake ip，这些域名相关的解析请求将会返回它们真实的 IP 地址
+  fake-ip-range: 198.18.0.1/16
+  
   fake-ip-filter:
     # 以下域名列表参考自 vernesong/OpenClash 项目，并由 Hackl0us 整理补充
-    # === LAN ===
     - '*.lan'
-    # === Linksys Wireless Router ===
-    - '*.linksys.com'
-    - '*.linksyssmartwifi.com'
-    # === Apple Software Update Service ===
-    - 'swscan.apple.com'
-    - 'mesu.apple.com'
-    # === Windows 10 Connnect Detection ===
-    - '*.msftconnecttest.com'
-    - '*.msftncsi.com'
-    # === NTP Service ===
+    - '*.localdomain'
+    - '*.example'
+    - '*.invalid'
+    - '*.localhost'
+    - '*.test'
+    - '*.local'
+    - '*.home.arpa'
     - 'time.*.com'
     - 'time.*.gov'
     - 'time.*.edu.cn'
@@ -59,7 +40,6 @@ dns:
     - 'time6.*.com'
     - 'time7.*.com'
     - 'ntp.*.com'
-    - 'ntp.*.com'
     - 'ntp1.*.com'
     - 'ntp2.*.com'
     - 'ntp3.*.com'
@@ -71,58 +51,73 @@ dns:
     - '*.ntp.org.cn'
     - '+.pool.ntp.org'
     - 'time1.cloud.tencent.com'
-    # === Music Service ===
-    ## NetEase
-    - '+.music.163.com'
+    - 'music.163.com'
+    - '*.music.163.com'
     - '*.126.net'
-    ## Baidu
     - 'musicapi.taihe.com'
     - 'music.taihe.com'
-    ## Kugou
     - 'songsearch.kugou.com'
     - 'trackercdn.kugou.com'
-    ## Kuwo
     - '*.kuwo.cn'
-    ## JOOX
     - 'api-jooxtt.sanook.com'
     - 'api.joox.com'
     - 'joox.com'
-    ## QQ
-    - '+.y.qq.com'
-    - '+.music.tc.qq.com'
+    - 'y.qq.com'
+    - '*.y.qq.com'
+    - 'streamoc.music.tc.qq.com'
+    - 'mobileoc.music.tc.qq.com'
+    - 'isure.stream.qqmusic.qq.com'
+    - 'dl.stream.qqmusic.qq.com'
     - 'aqqmusic.tc.qq.com'
-    - '+.stream.qqmusic.qq.com'
-    ## Xiami
+    - 'amobile.music.tc.qq.com'
     - '*.xiami.com'
-    ## Migu
-    - '+.music.migu.cn'
-    # === Game Service ===
-    ## Nintendo Switch
-    - '+.srv.nintendo.net'
-    ## Sony PlayStation
-    - '+.stun.playstation.net'
-    ## Microsoft Xbox
-    - 'xbox.*.microsoft.com'
-    - '+.xboxlive.com'
-    # === Other ===
-    ## QQ Quick Login
+    - '*.music.migu.cn'
+    - 'music.migu.cn'
+    - '*.msftconnecttest.com'
+    - '*.msftncsi.com'
+    - 'msftconnecttest.com'
+    - 'msftncsi.com'
     - 'localhost.ptlogin2.qq.com'
-    ## Golang
+    - 'localhost.sec.qq.com'
+    - '+.srv.nintendo.net'
+    - '+.stun.playstation.net'
+    - 'xbox.*.microsoft.com'
+    - 'xnotify.xboxlive.com'
+    - '+.battlenet.com.cn'
+    - '+.wotgame.cn'
+    - '+.wggames.cn'
+    - '+.wowsgame.cn'
+    - '+.wargaming.net'
     - 'proxy.golang.org'
-    ## STUN Server
     - 'stun.*.*'
     - 'stun.*.*.*'
-    ## Bilibili CDN
+    - '+.stun.*.*'
+    - '+.stun.*.*.*'
+    - '+.stun.*.*.*.*'
+    - 'heartbeat.belkin.com'
+    - '*.linksys.com'
+    - '*.linksyssmartwifi.com'
+    - '*.router.asus.com'
+    - 'mesu.apple.com'
+    - 'swscan.apple.com'
+    - 'swquery.apple.com'
+    - 'swdownload.apple.com'
+    - 'swcdn.apple.com'
+    - 'swdist.apple.com'
+    - 'lens.l.google.com'
+    - 'stun.l.google.com'
+    - '+.nflxvideo.net'
+    - '*.square-enix.com'
+    - '*.finalfantasyxiv.com'
+    - '*.ffxiv.com'
     - '*.mcdn.bilivideo.cn'
 
-  # 支持 UDP / TCP / DoT / DoH 协议的 DNS 服务，可以指明具体的连接端口号。
-  # 所有 DNS 请求将会直接发送到服务器，不经过任何代理。
-  # Clash 会使用最先获得的解析记录回复 DNS 请求
+  default-nameserver:
+    - 223.5.5.5
+    - 114.114.114.114
   nameserver:
     - https://doh.pub/dns-query
     - https://dns.alidns.com/dns-query
-  # 当 fallback 参数被配置时, DNS 请求将同时发送至上方 nameserver 列表和下方 fallback 列表中配置的所有 DNS 服务器.
-  # 当解析得到的 IP 地址的地理位置不是 CN 时，clash 将会选用 fallback 中 DNS 服务器的解析结果。
   fallback:
     - tls://1.1.1.1:853
     - tls://8.8.8.8:853
@@ -130,10 +125,34 @@ dns:
   fallback-filter:
     geoip: false
     ipcidr:
+      - 0.0.0.0/8
+      - 10.0.0.0/8
+      - 100.64.0.0/10
+      - 127.0.0.0/8
+      - 169.254.0.0/16
+      - 172.16.0.0/12
+      - 192.0.0.0/24
+      - 192.0.2.0/24
+      - 192.88.99.0/24
+      - 192.168.0.0/16
+      - 198.18.0.0/15
+      - 198.51.100.0/24
+      - 203.0.113.0/24
+      - 224.0.0.0/4
       - 240.0.0.0/4
-      - 0.0.0.0/32
-    # domain:
-    #   - '+.google.com'
-    #   - '+.facebook.com'
-    #   - '+.youtube.com'
+      - 255.255.255.255/32
+    domain:
+      - '+.google.com'
+      - '+.facebook.com'
+      - '+.youtube.com'
+      - '+.githubusercontent.com'
+      - '+.googlevideo.com'
 
+tun:
+  enable: true
+  stack: system
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack:
+    - tcp://8.8.8.8:53
+    - tcp://8.8.4.4:53
