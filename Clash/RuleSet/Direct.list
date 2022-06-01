@@ -12,6 +12,14 @@ DOMAIN-KEYWORD,tracker
 DOMAIN-SUFFIX,m.hotmail.com
 DOMAIN-SUFFIX,mail.me.com
 
+# DDNSTO
+DOMAIN-SUFFIX,tunnel.ddnsto.com
+DOMAIN-SUFFIX,tunnel.kooldns.cn
+DOMAIN-SUFFIX,tunnel.tocmcc.cn
+DOMAIN,www.kooldns.cn
+DOMAIN,www.tocmcc.cn
+DOMAIN,www.ddnsto.com
+
 # Arcaea
 ruleset=DIRECT,[]DOMAIN-SUFFIX,lowiro.com
 
