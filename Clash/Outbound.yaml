@@ -119,8 +119,8 @@ dns:
     - tls://dns.pub
     - tls://dns.alidns.com
   fallback:
+    - tls://1.1.1.1:853
     - tls://dns.google
-    - tls://dns11.quad9.net
 
   fallback-filter:
     geoip: false
