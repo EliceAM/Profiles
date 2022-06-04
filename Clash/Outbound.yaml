@@ -116,11 +116,11 @@ dns:
     - 119.29.29.29
     - 223.5.5.5
   nameserver:
-    - 119.29.29.29
-    - 223.5.5.5
+    - tls://dns.pub
+    - tls://dns.alidns.com
   fallback:
-    - tls://1.1.1.1:853
-    - tls://8.8.8.8:853
+    - tls://dns.google
+    - tls://dns11.quad9.net
 
   fallback-filter:
     geoip: false
