@@ -5,3 +5,6 @@ IP-CIDR6,2402:4e00:1200:ed00:0:9089:6dac:96b6/128,no-resolve
 DOMAIN,appcloud2.in.zhihu.com
 DOMAIN,mqtt.zhihu.com
 DOMAIN,sugar.zhihu.com
+
+# Bili_Auto_Regions
+IP-CIDR,203.107.1.1/24,no-resolve
