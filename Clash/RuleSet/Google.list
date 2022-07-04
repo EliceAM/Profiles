@@ -1,7 +1,0 @@
-# Google Search
-DOMAIN-KEYWORD,www.google.
-DOMAIN-SUFFIX,gstatic.com
-# Google Voice
-DOMAIN,lens.l.google.com
-# Chromecast with Google TV
-DOMAIN-KEYWORD,pa.google
