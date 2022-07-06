@@ -11,10 +11,10 @@ DOMAIN,www.tocmcc.cn
 DOMAIN,www.ddnsto.com
 
 # Arcaea
-ruleset=DIRECT,[]DOMAIN-SUFFIX,lowiro.com
+DOMAIN-SUFFIX,lowiro.com
 
 # Hnair
-ruleset=DIRECT,[]DOMAIN-SUFFIX,hnair.com
-ruleset=DIRECT,[]DOMAIN-SUFFIX,hnair.net
-ruleset=DIRECT,[]DOMAIN-KEYWORD,hnagroup
+DOMAIN-SUFFIX,hnair.com
+DOMAIN-SUFFIX,hnair.net
+DOMAIN-KEYWORD,hnagroup
 
