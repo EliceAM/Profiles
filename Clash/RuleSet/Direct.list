@@ -17,7 +17,7 @@ DOMAIN-SUFFIX,lowiro.com
 DOMAIN-SUFFIX,xgimi.com
 
 # Plex
-DOMAIN-SUFFIX,plex.tv
+DOMAIN-KEYWORD,plex
 
 # Hnair
 DOMAIN-SUFFIX,hnair.com
