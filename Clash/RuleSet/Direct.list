@@ -1,0 +1,30 @@
+# IPV6
+DOMAIN-KEYWORD,ipv6
+
+# Arcaea
+DOMAIN-SUFFIX,lowiro.com
+
+# Qnap
+DOMAIN-KEYWORD,myqnapcloud
+DOMAIN-SUFFIX,qnap.com
+DOMAIN-SUFFIX,qnap.com.cn
+
+# Plex
+DOMAIN-SUFFIX,plex.tv
+
+# XGIMI
+DOMAIN-SUFFIX,xgimi.com
+
+# NTP
+DOMAIN-SUFFIX,pool.ntp.org
+
+# BT
+DOMAIN-KEYWORD,announce
+DOMAIN-KEYWORD,torrent
+DOMAIN-KEYWORD,tracker
+DOMAIN-SUFFIX,tr.ready4.icu
+
+# Hnair
+DOMAIN-SUFFIX,hnair.com
+DOMAIN-SUFFIX,hnair.net
+DOMAIN-KEYWORD,hnagroup
