@@ -1,13 +1,3 @@
-# BBS
-DOMAIN-SUFFIX,gmgard.com
-DOMAIN-KEYWORD,south-plus
-DOMAIN-KEYWORD,level-plus
-DOMAIN-SUFFIX,hmoe11.net
-DOMAIN-SUFFIX,acgbox.link
-DOMAIN-SUFFIX,eyny.com
-DOMAIN-SUFFIX,mikocon.com
-DOMAIN-SUFFIX,ptt.cc
-
 # Torrent
 DOMAIN-SUFFIX,bt4g.org
 DOMAIN-SUFFIX,rarbg.to
@@ -25,91 +15,6 @@ DOMAIN-SUFFIX,opensubtitles.org
 DOMAIN-SUFFIX,fanart.tv
 DOMAIN-SUFFIX,tinymediamanager.org
 
-# Illustration
-DOMAIN-SUFFIX,saucenao.com
-DOMAIN-SUFFIX,yande.re
-DOMAIN-SUFFIX,konachan.com
-DOMAIN-KEYWORD,danbooru
-DOMAIN-KEYWORD,gelbooru
-
-# Manga
-DOMAIN-SUFFIX,vol.moe
-DOMAIN-SUFFIX,mox.moe
-DOMAIN-SUFFIX,img.mxomo.com
-DOMAIN-SUFFIX,nhentai.net
-
-# EHgallery
-DOMAIN-SUFFIX,e-hentai.org
-DOMAIN-SUFFIX,ehgt.org
-DOMAIN-SUFFIX,ehwiki.org
-DOMAIN-SUFFIX,exhentai.org
-DOMAIN-SUFFIX,hath.network
-DOMAIN-SUFFIX,hentaiverse.org
-DOMAIN-SUFFIX,lencr.org
-DOMAIN-SUFFIX,hath.network
-
-# Music
-DOMAIN-SUFFIX,bandcamp.com
-DOMAIN-SUFFIX,doujinstyle.com
-DOMAIN-SUFFIX,mikudb.moe
-DOMAIN-SUFFIX,anime-sharing.com
-
-# Anime
-DOMAIN-SUFFIX,vcb-s.com
-DOMAIN-SUFFIX,bgm.tv
-DOMAIN-SUFFIX,hanime1.me
-DOMAIN-SUFFIX,motherlessmedia.com
-DOMAIN-SUFFIX,sb-cd.com
-DOMAIN-KEYWORD,iwara.tv
-DOMAIN-SUFFIX,i.imgur.com
-
-# Game
-DOMAIN-KEYWORD,zodgame
-DOMAIN-SUFFIX,nexusmods.com
-DOMAIN-SUFFIX,byrut.org
-DOMAIN-SUFFIX,2dfan.com
-DOMAIN-SUFFIX,img.achost.top
-
-# Cosplay
-DOMAIN-SUFFIX,cosindex.251.sh
-DOMAIN-SUFFIX,cosersets.com
-
-# SUB
-DOMAIN-KEYWORD,catnet
-DOMAIN-KEYWORD,prprcloud
-DOMAIN-KEYWORD,bywa
-
 # Android
-DOMAIN-SUFFIX,apkmirror.com
 DOMAIN-SUFFIX,weesunday.com
 DOMAIN-SUFFIX,keeflys.com
-
-# AdGuard
-DOMAIN-SUFFIX,adtidy.org
-DOMAIN-SUFFIX,adguard.org
-
-# Other
-DOMAIN-SUFFIX,facebook-hardware.com
-DOMAIN-SUFFIX,meta.com
-DOMAIN-KEYWORD,jsdelivr
-DOMAIN-KEYWORD,yandex
-DOMAIN-SUFFIX,dlsite.com
-DOMAIN-SUFFIX,mediafire.com
-DOMAIN-SUFFIX,qnapclub.eu
-
-# NSFW
-DOMAIN-SUFFIX,xsijishe.com
-DOMAIN-SUFFIX,rewrfsrewr.xyz
-DOMAIN-SUFFIX,tellme.pw
-DOMAIN-KEYWORD,avmoo
-DOMAIN-KEYWORD,avsox
-DOMAIN-KEYWORD,avmemo
-DOMAIN-KEYWORD,btsow
-DOMAIN-SUFFIX,jable.tv
-DOMAIN-SUFFIX,mushroomtrack.com
-DOMAIN-SUFFIX,javdb.com
-DOMAIN-SUFFIX,javhq.tv
-DOMAIN-SUFFIX,madou.club
-DOMAIN-SUFFIX,prestige-av.com
-DOMAIN-KEYWORD,airav
-DOMAIN-KEYWORD,javbus
