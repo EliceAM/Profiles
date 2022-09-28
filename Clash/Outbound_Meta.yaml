@@ -22,12 +22,11 @@ dns:
     - 221.176.88.95
     - 211.138.164.6
   nameserver:
-    - https://223.5.5.5/dns-query
-    - https://223.6.6.6/dns-query
+    - https://dns.alidns.com/dns-query
   fallback:
-    - https://1.1.1.1/dns-query 
-    - https://1.0.0.1/dns-query 
-    - quic://dns.adguard-dns.com
+    - https://dns.cloudflare.com/dns-query
+    - tls://1.1.1.1:853
+    - tls://1.0.0.1:853
   fallback-filter:
     geoip: true
     geoip-code: CN                   #geoip匹配区域设定
