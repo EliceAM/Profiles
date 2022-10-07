@@ -15,12 +15,6 @@ DOMAIN-SUFFIX,xgimi.com
 # NTP
 DOMAIN-SUFFIX,pool.ntp.org
 
-# BT
-DOMAIN-KEYWORD,announce
-DOMAIN-KEYWORD,torrent
-DOMAIN-KEYWORD,tracker
-DOMAIN-SUFFIX,tr.ready4.icu
-
 # Hnair
 DOMAIN-SUFFIX,hnair.com
 DOMAIN-SUFFIX,hnair.net
