@@ -15,6 +15,14 @@ DOMAIN-SUFFIX,opensubtitles.org
 DOMAIN-SUFFIX,fanart.tv
 DOMAIN-SUFFIX,tinymediamanager.org
 
+# Music
+DOMAIN-SUFFIX,doujinstyle.com
+DOMAIN-SUFFIX,mikudb.moe
+
 # Android
 DOMAIN-SUFFIX,weesunday.com
 DOMAIN-SUFFIX,keeflys.com
+
+# Other
+DOMAIN-SUFFIX,supes.top
+DOMAIN-SUFFIX,qnapclub.eu
