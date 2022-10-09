@@ -1,4 +1,4 @@
-# Torrent
+# Jackett
 DOMAIN-SUFFIX,bt4g.org
 DOMAIN-SUFFIX,rarbg.to
 DOMAIN-SUFFIX,rarbgprx.org
@@ -11,10 +11,10 @@ DOMAIN-SUFFIX,share.dmhy.org
 # Media info
 DOMAIN-SUFFIX,tmdb.org
 DOMAIN-SUFFIX,themoviedb.org
-DOMAIN-SUFFIX,opensubtitles.org
 DOMAIN-SUFFIX,fanart.tv
 DOMAIN-SUFFIX,tinymediamanager.org
 DOMAIN-SUFFIX,opensubtitles.org
+DOMAIN-SUFFIX,opensubtitles.com
 
 # Music
 DOMAIN-SUFFIX,doujinstyle.com
@@ -24,8 +24,10 @@ DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,weesunday.com
 DOMAIN-SUFFIX,keeflys.com
 
-# Other
-DOMAIN-SUFFIX,supes.top
+# Qnap
 DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,cloudflare.docker.com
 DOMAIN-SUFFIX,jellyfin.org
+
+# Other
+DOMAIN-SUFFIX,supes.top
