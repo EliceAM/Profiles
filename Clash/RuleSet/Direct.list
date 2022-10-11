@@ -1,13 +1,15 @@
 # Arcaea
 DOMAIN-SUFFIX,lowiro.com
 
+# Hnair
+DOMAIN-SUFFIX,hnair.com
+DOMAIN-SUFFIX,hnair.net
+DOMAIN-KEYWORD,hnagroup
+
 # Qnap
 DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com
 DOMAIN-SUFFIX,qnap.com.cn
-
-# Plex
-DOMAIN-SUFFIX,plex.tv
 
 # XGIMI
 DOMAIN-SUFFIX,xgimi.com
@@ -15,7 +17,8 @@ DOMAIN-SUFFIX,xgimi.com
 # NTP
 DOMAIN-SUFFIX,pool.ntp.org
 
-# Hnair
-DOMAIN-SUFFIX,hnair.com
-DOMAIN-SUFFIX,hnair.net
-DOMAIN-KEYWORD,hnagroup
+# BT
+DOMAIN-KEYWORD,announce
+DOMAIN-KEYWORD,torrent
+DOMAIN-KEYWORD,tracker
+
