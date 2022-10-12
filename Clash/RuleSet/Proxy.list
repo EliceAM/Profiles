@@ -29,6 +29,7 @@ DOMAIN-SUFFIX,keeflys.com
 DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,cloudflare.docker.com
 DOMAIN-SUFFIX,jellyfin.org
+DOMAIN-SUFFIX,clamav.net
 
 # Other
 DOMAIN-SUFFIX,supes.top
