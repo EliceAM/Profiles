@@ -30,7 +30,12 @@ DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,cloudflare.docker.com
 DOMAIN-SUFFIX,registry-1.docker.io
 DOMAIN-SUFFIX,clamav.net
-;DOMAIN-SUFFIX,jellyfin.org
+
+# Plex
+DOMAIN-SUFFIX,plex.bz
+DOMAIN-SUFFIX,plex.direct
+DOMAIN-SUFFIX,plex.tv
+DOMAIN-SUFFIX,plexapp.com
 
 # Other
 DOMAIN-SUFFIX,supes.top
