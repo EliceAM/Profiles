@@ -6,6 +6,14 @@ DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com
 DOMAIN-SUFFIX,qnap.com.cn
 
+# Hnair
+DOMAIN-SUFFIX,hnair.com
+DOMAIN-SUFFIX,hnair.net
+DOMAIN-KEYWORD,hnagroup
+
+# Outlook
+DOMAIN-SUFFIX,hnair.com,m.hotmail.com
+
 # XGIMI
 DOMAIN-SUFFIX,xgimi.com
 
