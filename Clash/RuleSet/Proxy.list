@@ -32,10 +32,10 @@ DOMAIN-SUFFIX,registry-1.docker.io
 DOMAIN-SUFFIX,clamav.net
 
 # Plex
-DOMAIN-SUFFIX,plex.bz
+;DOMAIN-SUFFIX,plex.bz
 ;DOMAIN-SUFFIX,plex.direct
-DOMAIN-SUFFIX,plex.tv
-DOMAIN-SUFFIX,plexapp.com
+;DOMAIN-SUFFIX,plex.tv
+;DOMAIN-SUFFIX,plexapp.com
 
 # Other
 DOMAIN-SUFFIX,supes.top
