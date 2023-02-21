@@ -37,6 +37,9 @@ DOMAIN-SUFFIX,clamav.net
 ;DOMAIN-SUFFIX,plex.tv
 ;DOMAIN-SUFFIX,plexapp.com
 
+# Iwara
+DOMAIN-SUFFIX,iwara.tv
+
 # Other
 DOMAIN-SUFFIX,supes.top
 DOMAIN-SUFFIX,sub.suo.tw
