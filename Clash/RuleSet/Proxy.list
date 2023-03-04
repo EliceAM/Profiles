@@ -21,26 +21,22 @@ DOMAIN-SUFFIX,doujinstyle.com
 DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,diverse.direct
 
-# Android
-DOMAIN-SUFFIX,weesunday.com
-DOMAIN-SUFFIX,keeflys.com
+# Route
+DOMAIN-SUFFIX,supes.top
+DOMAIN-SUFFIX,api.dler.io
 
 # Qnap
-;DOMAIN-SUFFIX,qnapclub.eu
+DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,cloudflare.docker.com
 DOMAIN-SUFFIX,registry-1.docker.io
 DOMAIN-SUFFIX,clamav.net
 
-# Plex
-;DOMAIN-SUFFIX,plex.bz
-;DOMAIN-SUFFIX,plex.direct
-;DOMAIN-SUFFIX,plex.tv
-;DOMAIN-SUFFIX,plexapp.com
+# Android
+DOMAIN-SUFFIX,weesunday.com
+DOMAIN-SUFFIX,keeflys.com
 
 # Iwara
 DOMAIN-SUFFIX,iwara.tv
 
 # Other
-DOMAIN-SUFFIX,supes.top
-DOMAIN-SUFFIX,sub.suo.tw
-DOMAIN-SUFFIX,api.dler.io
+DOMAIN-SUFFIX,wiki.arcaea.cn
