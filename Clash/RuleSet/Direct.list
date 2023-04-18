@@ -6,11 +6,6 @@ DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com
 DOMAIN-SUFFIX,qnap.com.cn
 
-# Hnair
-DOMAIN-SUFFIX,hnair.com
-DOMAIN-SUFFIX,hnair.net
-DOMAIN-KEYWORD,hnagroup
-
 # Outlook
 DOMAIN-SUFFIX,m.hotmail.com
 
@@ -24,4 +19,3 @@ DOMAIN-SUFFIX,pool.ntp.org
 DOMAIN-KEYWORD,announce
 DOMAIN-KEYWORD,torrent
 DOMAIN-KEYWORD,tracker
-
