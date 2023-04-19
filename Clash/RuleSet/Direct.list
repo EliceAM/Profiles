@@ -3,7 +3,7 @@ DOMAIN-SUFFIX,lowiro.com
 
 # Qnap
 DOMAIN-KEYWORD,myqnapcloud
-DOMAIN-SUFFIX,qnap.com
+;DOMAIN-SUFFIX,qnap.com
 DOMAIN-SUFFIX,qnap.com.cn
 
 # Outlook
