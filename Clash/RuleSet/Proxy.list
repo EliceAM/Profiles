@@ -16,6 +16,9 @@ DOMAIN-SUFFIX,tinymediamanager.org
 DOMAIN-SUFFIX,opensubtitles.org
 DOMAIN-SUFFIX,opensubtitles.com
 
+# PVE
+DOMAIN-SUFFIX,proxmox.com
+
 # Music
 DOMAIN-SUFFIX,doujinstyle.com
 DOMAIN-SUFFIX,mikudb.moe
