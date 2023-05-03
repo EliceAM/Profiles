@@ -25,10 +25,6 @@ DOMAIN-SUFFIX,doujinstyle.com
 DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,diverse.direct
 
-# Route
-DOMAIN-SUFFIX,supes.top
-DOMAIN-SUFFIX,api.dler.io
-
 # Qnap
 DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,cloudflare.docker.com
@@ -36,12 +32,25 @@ DOMAIN-SUFFIX,registry-1.docker.io
 DOMAIN-SUFFIX,clamav.net
 
 # Android
-DOMAIN-SUFFIX,weesunday.com
-DOMAIN-SUFFIX,keeflys.com
+DOMAIN-SUFFIX,apkpure.com
 
 # Iwara
 DOMAIN-SUFFIX,iwara.tv
-
-# Other
 DOMAIN-SUFFIX,wiki.arcaea.cn
+
+# NSFW
+DOMAIN-SUFFIX,xsijishe.com
+DOMAIN-SUFFIX,rewrfsrewr.xyz
+DOMAIN-SUFFIX,tellme.pw
+DOMAIN-KEYWORD,avmoo
+DOMAIN-KEYWORD,avsox
+DOMAIN-KEYWORD,avmemo
+DOMAIN-KEYWORD,btsow
+DOMAIN-SUFFIX,jable.tv
+DOMAIN-SUFFIX,mushroomtrack.com
 DOMAIN-SUFFIX,javdb.com
+DOMAIN-SUFFIX,javhq.tv
+DOMAIN-SUFFIX,madou.club
+DOMAIN-SUFFIX,prestige-av.com
+DOMAIN-KEYWORD,airav
+DOMAIN-KEYWORD,javbus
