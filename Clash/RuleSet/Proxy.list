@@ -20,10 +20,8 @@ DOMAIN-SUFFIX,opensubtitles.com
 DOMAIN-SUFFIX,proxmox.com
 DOMAIN-SUFFIX,openwrt.org
 
-# Music
-DOMAIN-SUFFIX,doujinstyle.com
-DOMAIN-SUFFIX,mikudb.moe
-DOMAIN-SUFFIX,diverse.direct
+# Android
+DOMAIN-SUFFIX,apkpure.com
 
 # Qnap
 DOMAIN-SUFFIX,qnapclub.eu
@@ -31,8 +29,13 @@ DOMAIN-SUFFIX,cloudflare.docker.com
 DOMAIN-SUFFIX,registry-1.docker.io
 DOMAIN-SUFFIX,clamav.net
 
-# Android
-DOMAIN-SUFFIX,apkpure.com
+# Music
+DOMAIN-SUFFIX,doujinstyle.com
+DOMAIN-SUFFIX,mikudb.moe
+DOMAIN-SUFFIX,diverse.direct
+
+# Others
+DOMAIN-SUFFIX,amazonaws.com
 
 # Iwara
 DOMAIN-SUFFIX,iwara.tv
