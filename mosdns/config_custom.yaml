@@ -59,7 +59,7 @@ plugins:
     args:
       files:
         - "/etc/mosdns/rule/greylist.txt"
-  # DDNS域名 
+  # DDNS域名 加入的域名始终使用 “本地 DNS” 进行解析，并且修改 TTL 为 5 秒，解析结果不进行缓存
   - tag: ddnslist
     type: domain_set
     args:
@@ -98,7 +98,7 @@ plugins:
     type: sequence
     args:
       - exec: ttl 600-3600      
-  # 修改ttl DDNS & FAKE-IP
+  # 修改ttl ddns & fakeip
   - tag: modify_fake_ttl
     type: sequence
     args:
@@ -109,8 +109,8 @@ plugins:
     args:
       - matches: qname $geosite_cn
         exec: $modify_ttl
-      - matches: "!qname $geosite_cn
-        exec: $modifyy_fake_ttl
+      - matches: "!qname $geosite_cn"
+        exec: $modify_fake_ttl
       - matches: has_resp
         exec: accept
 
