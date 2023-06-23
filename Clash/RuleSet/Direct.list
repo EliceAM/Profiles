@@ -19,3 +19,5 @@ DOMAIN-SUFFIX,pool.ntp.org
 DOMAIN-KEYWORD,announce
 DOMAIN-KEYWORD,torrent
 DOMAIN-KEYWORD,tracker
+DOMAIN-SUFFIX,bt.endpot.com
+DOMAIN-SUFFIX,t1.hloli.org
