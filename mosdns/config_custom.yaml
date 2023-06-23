@@ -59,7 +59,7 @@ plugins:
     args:
       files:
         - "/etc/mosdns/rule/greylist.txt"
-  # DDNS域名 加入的域名始终使用 “本地 DNS” 进行解析，并且修改 TTL 为 5 秒，解析结果不进行缓存
+  # DDNS域名 
   - tag: ddnslist
     type: domain_set
     args:
@@ -90,7 +90,7 @@ plugins:
     type: cache
     args:
       size: 102400
-      lazy_cache_ttl: 259200
+      lazy_cache_ttl: 0
       dump_file: "/etc/mosdns/cache.dump"
       dump_interval: 600
   # 修改ttl
@@ -98,8 +98,8 @@ plugins:
     type: sequence
     args:
       - exec: ttl 600-3600      
-  # 修改 ddns 域名 ttl
-  - tag: modify_ddns_ttl
+  # 修改ttl DDNS & FAKE-IP
+  - tag: modify_fake_ttl
     type: sequence
     args:
       - exec: ttl 5-5
@@ -107,10 +107,10 @@ plugins:
   - tag: has_resp_sequence
     type: sequence
     args:
-      - matches: qname $ddnslist
-        exec: $modify_ddns_ttl
-      - matches: "!qname $ddnslist"
+      - matches: qname $geosite_cn
         exec: $modify_ttl
+      - matches: "!qname $geosite_cn
+        exec: $modifyy_fake_ttl
       - matches: has_resp
         exec: accept
 
