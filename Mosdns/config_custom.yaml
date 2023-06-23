@@ -90,7 +90,7 @@ plugins:
     type: cache
     args:
       size: 102400
-      lazy_cache_ttl: 0
+      lazy_cache_ttl: 259200
       dump_file: "/etc/mosdns/cache.dump"
       dump_interval: 600
   # 修改ttl
@@ -231,10 +231,7 @@ plugins:
       - exec: $hosts
       - exec: jump has_resp_sequence
       - matches:
-        - "!qname $geosite_ads_all"
-        - "!qname $ddnslist"
-        - "!qname $blocklist"
-        - "!qname $local_ptr"
+        - qname $geosite_cn
         exec: $lazy_cache
       - exec: $redirect
       - exec: jump has_resp_sequence
