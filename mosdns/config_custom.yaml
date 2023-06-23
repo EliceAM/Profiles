@@ -34,7 +34,7 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_tld-cn.txt"
-  - tag: geosite_game@cn
+  - tag: geosite_game_cn
     type: domain_set
     args:
       files:
@@ -172,8 +172,10 @@ plugins:
   - tag: query_is_whitelist_domain
     type: sequence
     args:
-      - matches: qname $geosite_game@cn
+      - matches: qname $geosite_game_cn
+        exec: $local_sequence
       - matches: qname $geosite_tld_cn
+        exec: $local_sequence
       - matches: qname $whitelist 
         exec: $local_sequence
   # 查询是否为 灰名单
