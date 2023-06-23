@@ -29,9 +29,19 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_category-ads-all.txt"
-        
+  - tag: geosite_tld_cn
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_tld-cn.txt"
+  - tag: geosite_game@cn
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_category-games@cn.txt"
+     
  ## > OpenWrt luci 网页规则
- # 白名单 加入的域名始终允许使用 “本地 DNS” 进行解析
+ # 白名单 加入的域名始终允许使用 “国内解析” 进行解析
   - tag: whitelist
     type: domain_set
     args:
@@ -43,7 +53,7 @@ plugins:
     args:
       files:
         - "/etc/mosdns/rule/blocklist.txt"
-  # 灰名单 加入的域名始终使用 “远程 DNS” 进行解析
+  # 灰名单 加入的域名始终使用 “国外解析” 进行解析
   - tag: greylist
     type: domain_set
     args:
@@ -162,7 +172,9 @@ plugins:
   - tag: query_is_whitelist_domain
     type: sequence
     args:
-      - matches: qname $whitelist
+      - matches: qname $geosite_game@cn
+      - matches: qname $geosite_tld_cn
+      - matches: qname $whitelist 
         exec: $local_sequence
   # 查询是否为 灰名单
   - tag: query_is_greylist_domain
