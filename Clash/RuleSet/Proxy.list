@@ -36,8 +36,9 @@ DOMAIN-SUFFIX,diverse.direct
 
 # Others
 DOMAIN-SUFFIX,nyaa.si
-DOMAIN-SUFFIX,amazonaws.com
-DOMAIN-SUFFIX,south-plus.net
+DOMAIN-SUFFIX,gmgard.com
+DOMAIN-KEYWORD,-plus
+DOMAIN-KEYWORD,zodgame
 
 # Iwara
 DOMAIN-SUFFIX,iwara.tv
