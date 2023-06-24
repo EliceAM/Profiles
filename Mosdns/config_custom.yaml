@@ -24,11 +24,6 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_geolocation-!cn.txt"
-  - tag: geosite_ads_all
-    type: domain_set
-    args:
-      files:
-        - "/var/mosdns/geosite_category-ads-all.txt"
   - tag: geosite_tld_cn
     type: domain_set
     args:
@@ -190,8 +185,6 @@ plugins:
   - tag: query_is_reject_domain
     type: sequence
     args:
-      - matches: qname $geosite_ads_all
-        exec: reject 3
       - matches: qname $blocklist
         exec: reject 3
       - matches:
@@ -249,11 +242,9 @@ plugins:
       - exec: jump has_resp_sequence
       - exec: $fallback
 
-  # 启动 udp 服务器。
+  # 启动 udp 服务器
   - tag: udp_server
     type: udp_server
     args:
       entry: main_sequence
-      listen: ":53"
-
-##修改自 https://blog.suysker.xyz/archives/250
+      listen: ":5335"
