@@ -3,7 +3,6 @@ DOMAIN-SUFFIX,lowiro.com
 
 # Qnap
 DOMAIN-KEYWORD,myqnapcloud
-;DOMAIN-SUFFIX,qnap.com
 DOMAIN-SUFFIX,qnap.com.cn
 
 # Outlook
@@ -13,7 +12,7 @@ DOMAIN-SUFFIX,m.hotmail.com
 DOMAIN-SUFFIX,xgimi.com
 
 # NTP
-DOMAIN-SUFFIX,pool.ntp.org
+DOMAIN-KEYWORD,pool.ntp.org
 
 # BT
 DOMAIN-KEYWORD,announce
