@@ -89,7 +89,7 @@ plugins:
   - tag: lazy_cache
     type: cache
     args:
-      size: 102400
+      size: 10240
       lazy_cache_ttl: 259200
       dump_file: "/etc/mosdns/cache.dump"
       dump_interval: 600
@@ -256,3 +256,4 @@ plugins:
       entry: main_sequence
       listen: ":53"
 
+##修改自 https://blog.suysker.xyz/archives/250
