@@ -1,10 +1,4 @@
-# Jackett
-DOMAIN-SUFFIX,bt4g.org
-DOMAIN-SUFFIX,rarbg.to
-DOMAIN-SUFFIX,rarbgprx.org
-DOMAIN-SUFFIX,eztv.re
-DOMAIN-SUFFIX,acg.rip
-DOMAIN-SUFFIX,bangumi.moe
+# Dmhy
 DOMAIN-SUFFIX,dmhy.org
 
 # Media info
@@ -26,7 +20,7 @@ DOMAIN-SUFFIX,apkmirror.com
 # Qnap
 DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,cloudflare.docker.com
-DOMAIN-SUFFIX,registry-1.docker.io
+DOMAIN-SUFFIX,docker.io
 DOMAIN-SUFFIX,clamav.net
 
 # Music
