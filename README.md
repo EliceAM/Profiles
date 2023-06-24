@@ -3,9 +3,7 @@
 适用于如下的OpenClash和MosDNS的结构场景，主要解决移动宽带的DNS污染和OpenClash（Redir-Host模式）切换不同国家节点时DNS缓存造成的分流异常
 
 
-客户端—>MosDNS（分流国内外并兼容去广告列表）
-
-        V
+客户端—>MosDNS（分流国内外并兼容去广告列表）—>
         
 国内—>国内DNS服务器（ttl 600 Cache）
 
