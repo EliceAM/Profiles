@@ -4,7 +4,9 @@
 
 
 客户端—>MosDNS（兼容去广告列表） 
+
 国内—>国内DNS服务器（ttl 600 Cache）
+
 国外—>OpenClash —>国外DNS服务器（ttl 5 no Cache）
               
 本配置亦可解决OpenClash的Fake—IP的持久化问题，更推荐使用Fake—IP模式
