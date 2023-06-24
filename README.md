@@ -4,7 +4,9 @@
 
 
 客户端—>MosDNS（分流国内外并兼容去广告列表）
+
         V
+        
 国内—>国内DNS服务器（ttl 600 Cache）
 
 国外—>OpenClash —>国外DNS服务器（ttl 5 no Cache）
