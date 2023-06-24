@@ -5,8 +5,8 @@
 
 客户端—>AdGuadHome（网页web管理&去广告）—>MosDNS（分流国内外并负责缓存）—>
         
-国内—>国内DNS服务器（ttl 600 Cache）
+国内—>国内DNS服务器（ttl 600 计入乐观缓存）
 
-国外—>OpenClash —>国外DNS服务器（ttl 5 no Cache）
+国外—>OpenClash —>国外DNS服务器（ttl 5 不缓存）
               
 本配置亦可解决OpenClash的Fake—IP的持久化问题，推荐使用Redir-Host模式
