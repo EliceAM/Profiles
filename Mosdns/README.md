@@ -1,8 +1,10 @@
 # 个人适用的Openwrt MosDNS插件V5版本 自定义配置 
 
-直接对53端口监听，不使用Dnsmasq转发
+AdGuardHome 直接监听53端口，不使用Dnsmasq转发
 
-OpenClash监听端口为7874
+MosDNS 监听端口为5335
+
+OpenClash 监听端口为7874
 
 国内请求转发至腾讯阿里dot修改ttl为600并计入缓存，国外请求转发至OpenClash插件做进一步分流，并将返回的结果ttl修改为5，不计入缓存以解决OpenClash	Redir-Host模式下切换国家地区时DNS不及时刷新导致的访问问题或fakeip模式的持久化问题
 
