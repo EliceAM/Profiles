@@ -11,8 +11,6 @@ OpenClash 监听端口为7874
 
 需要手动配置导出以下 GeoSite 标签
 
-category-ads-all
-
 category-games@cn
 
 tld-cn
