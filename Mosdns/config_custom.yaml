@@ -194,25 +194,27 @@ plugins:
       - matches: qtype 65
         exec: reject 3
 
-  ## > 兜底设置
-  # fallback匹配结果为国内IP
+  ## > fallback
+  # 返回非国内 ip 则 drop_resp
   - tag: query_is_local_ip
     type: sequence
     args:
       - exec: $local_sequence
       - matches: "!resp_ip $geoip_cn"
         exec: drop_resp
-  # 均不匹配则转发至openclash
-  - tag: query_failed
+
+  # 用远程服务器 
+  - tag: query_is_remote
     type: sequence
     args:
       - exec: $remote_sequence
-  # fallback 兜底匹配
+
+  # fallback 用远程服务器 
   - tag: fallback
     type: fallback
     args:
       primary: query_is_local_ip
-      secondary: query_failed
+      secondary: query_is_remote
       threshold: 500
       always_standby: true
 
