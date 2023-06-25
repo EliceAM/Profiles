@@ -117,14 +117,10 @@ plugins:
       concurrent: 2
       upstreams:
         - addr: tls://223.5.5.5
-          enable_pipeline: true
-          max_conns: 2
-          insecure_skip_verify: false
           idle_timeout: 10
         - addr: tls://1.12.12.12
           enable_pipeline: true
           max_conns: 2
-          insecure_skip_verify: false
           idle_timeout: 10
   # 转发到openclash
   - tag: forward_remote
