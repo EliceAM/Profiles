@@ -8,6 +8,9 @@ DOMAIN-SUFFIX,qnap.com.cn
 # Outlook
 DOMAIN-SUFFIX,m.hotmail.com
 
+# PLEX
+DOMAIN-SUFFIX,plex.direct
+
 # XGIMI
 DOMAIN-SUFFIX,xgimi.com
 
