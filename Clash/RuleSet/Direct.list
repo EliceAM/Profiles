@@ -5,8 +5,10 @@ DOMAIN-SUFFIX,lowiro.com
 DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com.cn
 
-# Outlook
+# Mail
 DOMAIN-SUFFIX,m.hotmail.com
+DOMAIN-SUFFIX,mail.me.com
+DOMAIN-SUFFIX,hnair.com
 
 # PLEX
 DOMAIN-SUFFIX,plex.direct
