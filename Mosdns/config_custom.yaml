@@ -34,6 +34,17 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_category-games@cn.txt"
+  - tag: geosite_apple_cn
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_apple@cn.txt"
+  - tag: geosite_google_cn
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_google@cn.txt"
+
      
  ## > OpenWrt luci 网页规则
  # 白名单 加入的域名始终允许使用 “国内解析” 进行解析
@@ -104,8 +115,15 @@ plugins:
     args:
       - matches: qname $geosite_cn
         exec: $modify_ttl
-      - matches: "!qname $geosite_cn"
-        exec: $modify_fake_ttl
+      - matches: qname $geosite_tld_cn
+        exec: $modify_ttl
+      - matches: qname $geosite_game_cn
+        exec: $modify_ttl
+      - matches: qname $geosite_apple_cn
+        exec: $modify_ttl
+      - matches: qname $geosite_google_cn
+        exec: $modify_ttl
+      - exec: $modify_fake_ttl
       - matches: has_resp
         exec: accept
 
@@ -147,6 +165,15 @@ plugins:
     args:
       - matches: qname $geosite_cn
         exec: $local_sequence
+      - matches: qname $geosite_tld_cn
+        exec: $local_sequence
+      - matches: qname $geosite_game_cn
+        exec: $local_sequence
+      - matches: qname $geosite_apple_cn
+        exec: $local_sequence
+      - matches: qname $geosite_google_cn
+        exec: $local_sequence
+   
   # 查询是否为 国外域名
   - tag: query_is_no_local_domain
     type: sequence
@@ -163,10 +190,6 @@ plugins:
   - tag: query_is_whitelist_domain
     type: sequence
     args:
-      - matches: qname $geosite_game_cn
-        exec: $local_sequence
-      - matches: qname $geosite_tld_cn
-        exec: $local_sequence
       - matches: qname $whitelist 
         exec: $local_sequence
   # 查询是否为 灰名单
@@ -223,6 +246,18 @@ plugins:
       - exec: jump has_resp_sequence
       - matches:
         - qname $geosite_cn
+        exec: $lazy_cache
+      - matches:
+        - qname $geosite_tld_cn
+        exec: $lazy_cache
+      - matches:
+        - qname $geosite_game_cn
+        exec: $lazy_cache
+      - matches:
+        - qname $geosite_apple_cn
+        exec: $lazy_cache
+      - matches:
+        - qname $geosite_google_cn
         exec: $lazy_cache
       - exec: $redirect
       - exec: jump has_resp_sequence
