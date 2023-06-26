@@ -34,11 +34,11 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_category-games@cn.txt"
-  - tag: geosite_apple_cn
+  - tag: geosite_apple
     type: domain_set
     args:
       files:
-        - "/var/mosdns/geosite_apple@cn.txt"
+        - "/var/mosdns/geosite_apple.txt"
 
      
  ## > OpenWrt luci 网页规则
@@ -93,30 +93,25 @@ plugins:
       size: 10240
       lazy_cache_ttl: 259200
       dump_file: "/etc/mosdns/cache.dump"
-      dump_interval: 600
-  # 修改ttl
+      dump_interval: 600    
+  # 国内响应并修改ttl 600
   - tag: modify_ttl
     type: sequence
     args:
-      - exec: ttl 600-3600      
-  # 修改ttl ddns & fakeip
+      - exec: ttl 600-3600
+      - matches: has_resp
+        exec: accept       
+  # 国外响应并修改ttl 5
   - tag: modify_fake_ttl
     type: sequence
     args:
       - exec: ttl 5-5
-  # 结果响应，修改TTL并终止查询
+      - matches: has_resp
+        exec: accept
+  # 有响应则终止返回
   - tag: has_resp_sequence
     type: sequence
     args:
-      - matches: qname $geosite_cn
-        exec: $modify_ttl
-      - matches: qname $geosite_tld_cn
-        exec: $modify_ttl
-      - matches: qname $geosite_game_cn
-        exec: $modify_ttl
-      - matches: qname $geosite_apple_cn
-        exec: $modify_ttl
-      - exec: $modify_fake_ttl
       - matches: has_resp
         exec: accept
 
@@ -162,10 +157,8 @@ plugins:
         exec: $local_sequence
       - matches: qname $geosite_game_cn
         exec: $local_sequence
-      - matches: qname $geosite_apple_cn
-        exec: $local_sequence
-
-   
+      - matches: qname $geosite_apple
+        exec: $local_sequence   
   # 查询是否为 国外域名
   - tag: query_is_no_local_domain
     type: sequence
@@ -246,22 +239,22 @@ plugins:
         - qname $geosite_game_cn
         exec: $lazy_cache
       - matches:
-        - qname $geosite_apple_cn
+        - qname $geosite_apple
         exec: $lazy_cache
       - exec: $redirect
       - exec: jump has_resp_sequence
       - exec: $query_is_ddns_domain
-      - exec: jump has_resp_sequence
+      - exec: jump modify_fake_ttl
       - exec: $query_is_whitelist_domain
-      - exec: jump has_resp_sequence
+      - exec: jump modify_ttl
       - exec: $query_is_reject_domain
       - exec: jump has_resp_sequence
       - exec: $query_is_greylist_domain
-      - exec: jump has_resp_sequence
+      - exec: jump modify_fake_ttl
       - exec: $query_is_local_domain
-      - exec: jump has_resp_sequence
+      - exec: jump modify_ttl
       - exec: $query_is_no_local_domain
-      - exec: jump has_resp_sequence
+      - exec: jump modify_fake_ttl
       - exec: $fallback
 
   # 启动 udp 服务器
