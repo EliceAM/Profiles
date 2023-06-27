@@ -1,26 +1,35 @@
 # Arcaea
 DOMAIN-SUFFIX,lowiro.com
 
-# Qnap
-DOMAIN-KEYWORD,myqnapcloud
-DOMAIN-SUFFIX,qnap.com.cn
-
-# Mail
-DOMAIN-SUFFIX,m.hotmail.com
-DOMAIN-SUFFIX,mail.me.com
-DOMAIN-SUFFIX,hnair.com
-
-# PLEX
-DOMAIN-SUFFIX,plex.direct
-
-# XGIMI
-DOMAIN-SUFFIX,xgimi.com
-
-# NTP
-DOMAIN-KEYWORD,pool.ntp.org
-
 # BT
 DOMAIN-SUFFIX,daydream.dmhy.best
 DOMAIN-KEYWORD,announce
 DOMAIN-KEYWORD,torrent
 DOMAIN-KEYWORD,tracker
+
+# HNA
+DOMAIN-KEYWORD,hnagroup
+DOMAIN-SUFFIX,hnair.net
+DOMAIN-SUFFIX,hnair.com
+
+# iCLoud
+DOMAIN-KEYWORD,icloud
+
+# Mail
+DOMAIN-SUFFIX,hotmail.com
+DOMAIN-SUFFIX,me.com
+DOMAIN-SUFFIX,hnair.com
+
+# NTP
+DOMAIN-KEYWORD,pool.ntp.org
+
+# PLEX
+DOMAIN-SUFFIX,plex.direct
+
+# Qnap
+DOMAIN-KEYWORD,myqnapcloud
+DOMAIN-SUFFIX,qnap.com.cn
+
+# XGIMI
+DOMAIN-SUFFIX,xgimi.com
+
