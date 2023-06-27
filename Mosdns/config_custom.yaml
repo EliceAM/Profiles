@@ -34,11 +34,11 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_category-games@cn.txt"
-  - tag: geosite_apple
+  - tag: geosite_icloud
     type: domain_set
     args:
       files:
-        - "/var/mosdns/geosite_apple.txt"
+        - "/var/mosdns/geosite_icloud.txt"
 
  ## > OpenWrt luci 网页规则
  # 白名单 加入的域名始终允许使用 “国内解析” 进行解析
@@ -151,14 +151,8 @@ plugins:
   - tag: query_is_local_domain
     type: sequence
     args:
-      - matches: qname $geosite_cn
+      - matches: qname { $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_icloud }  
         exec: $local_sequence
-      - matches: qname $geosite_tld_cn
-        exec: $local_sequence
-      - matches: qname $geosite_game_cn
-        exec: $local_sequence
-      - matches: qname $geosite_apple
-        exec: $local_sequence   
   # 查询是否为 国外域名
   - tag: query_is_no_local_domain
     type: sequence
@@ -232,7 +226,7 @@ plugins:
       - exec: $redirect
       - exec: jump has_resp_sequence
       - matches:
-        - qname { $whitelist | $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_apple }  
+        - qname { $whitelist | $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_icloud }  
         exec: $lazy_cache
       - exec: $query_is_ddns_domain
       - exec: jump modify_fake_ttl
