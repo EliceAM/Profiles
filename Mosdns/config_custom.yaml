@@ -119,7 +119,7 @@ plugins:
   - tag: forward_local
     type: forward
     args:
-      concurrent: 2
+      concurrent: 3
       upstreams:
         - addr: tls://223.5.5.5
           idle_timeout: 10
