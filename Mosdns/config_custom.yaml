@@ -40,7 +40,6 @@ plugins:
       files:
         - "/var/mosdns/geosite_apple.txt"
 
-     
  ## > OpenWrt luci 网页规则
  # 白名单 加入的域名始终允许使用 “国内解析” 进行解析
   - tag: whitelist
@@ -128,6 +127,7 @@ plugins:
           enable_pipeline: true
           max_conns: 2
           idle_timeout: 10
+
   # 转发到openclash
   - tag: forward_remote
     type: forward
@@ -229,20 +229,11 @@ plugins:
     args:
       - exec: $hosts
       - exec: jump has_resp_sequence
-      - matches:
-        - qname $geosite_cn
-        exec: $lazy_cache
-      - matches:
-        - qname $geosite_tld_cn
-        exec: $lazy_cache
-      - matches:
-        - qname $geosite_game_cn
-        exec: $lazy_cache
-      - matches:
-        - qname $geosite_apple
-        exec: $lazy_cache
       - exec: $redirect
       - exec: jump has_resp_sequence
+      - matches:
+        - qname { $whitelist | $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_apple }  
+        exec: $lazy_cache
       - exec: $query_is_ddns_domain
       - exec: jump modify_fake_ttl
       - exec: $query_is_whitelist_domain
