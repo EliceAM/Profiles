@@ -1,5 +1,17 @@
+# Android
+DOMAIN-SUFFIX,apkpure.com
+DOMAIN-SUFFIX,apkmirror.com
+
+# Arcaea Wiki
+DOMAIN-SUFFIX,wiki.arcaea.cn
+
 # Dmhy
 DOMAIN-SUFFIX,dmhy.org
+
+# Linux
+DOMAIN-SUFFIX,proxmox.com
+DOMAIN-SUFFIX,openwrt.org
+DOMAIN-SUFFIX,kernel.org
 
 # Media info
 DOMAIN-SUFFIX,tmdb.org
@@ -8,14 +20,10 @@ DOMAIN-SUFFIX,fanart.tv
 DOMAIN-SUFFIX,tinymediamanager.org
 DOMAIN-KEYWORD,opensubtitles
 
-# Linux
-DOMAIN-SUFFIX,proxmox.com
-DOMAIN-SUFFIX,openwrt.org
-DOMAIN-SUFFIX,kernel.org
-
-# Android
-DOMAIN-SUFFIX,apkpure.com
-DOMAIN-SUFFIX,apkmirror.com
+# Music
+DOMAIN-SUFFIX,doujinstyle.com
+DOMAIN-SUFFIX,mikudb.moe
+DOMAIN-SUFFIX,diverse.direct
 
 # Qnap
 DOMAIN-SUFFIX,qnapclub.eu
@@ -23,15 +31,8 @@ DOMAIN-SUFFIX,cloudflare.docker.com
 DOMAIN-SUFFIX,docker.io
 DOMAIN-SUFFIX,clamav.net
 
-# Music
-DOMAIN-SUFFIX,doujinstyle.com
-DOMAIN-SUFFIX,mikudb.moe
-DOMAIN-SUFFIX,diverse.direct
-
-# Arcaea Wiki
-DOMAIN-SUFFIX,wiki.arcaea.cn
-
-# Others
+# The Others
+DOMAIN-SUFFIX,libtorrent.org
 DOMAIN-SUFFIX,nyaa.si
 DOMAIN-SUFFIX,gmgard.com
 DOMAIN-KEYWORD,-plus
