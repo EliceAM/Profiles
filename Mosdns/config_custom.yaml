@@ -14,7 +14,6 @@ plugins:
     args:
       files:
         - "/var/mosdns/geoip_cn.txt"
-        - "/var/mosdns/geoip_private.txt"
   - tag: local_domain
     type: domain_set
     args:
@@ -28,11 +27,6 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_geolocation-!cn.txt"
-  - tag: geosite_private
-    type: domain_set
-    args:
-      files:
-        - "/var/mosdns/geosite_private.txt"
 
  ## > OpenWrt luci 网页规则
  # 白名单 加入的域名始终允许使用 “国内解析” 进行解析
@@ -171,12 +165,6 @@ plugins:
     args:
       - matches: "qname $greylist"
         exec: $remote_sequence
-  # 查询是否为 内网域名
-  - tag: query_is_private_domain
-    type: sequence
-    args:
-      - matches: "qname $geosite_private"
-        exec: $remote_sequence
 
   ## > 黑名单&广告拦截
   # 拦截名单
@@ -222,8 +210,6 @@ plugins:
       - exec: $hosts
       - exec: jump has_resp_sequence
       - exec: $redirect
-      - exec: jump has_resp_sequence
-      - exec: $query_is_private_domain
       - exec: jump has_resp_sequence
       - exec: $query_is_ddns_domain
       - exec: jump has_resp_sequence
