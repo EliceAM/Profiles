@@ -17,8 +17,5 @@ geosite_category-games@cn
 
 geosite_icloud
 
-geosite_private
-
-geoip_private
 
 #兼容OpenWRT内MosDNS的luci管理页面，可直接在 MosDNS/RULE LIST/各个名单 内直接添加自定义规则并直接应用，不再局限于插件本身的【规则列表仅适用于 “内置预设” 配置文件】限制
