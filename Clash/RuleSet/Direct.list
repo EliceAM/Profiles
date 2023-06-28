@@ -18,9 +18,6 @@ DOMAIN-SUFFIX,hotmail.com
 # NTP
 DOMAIN-KEYWORD,pool.ntp.org
 
-# PLEX
-DOMAIN-SUFFIX,plex.direct
-
 # Qnap
 DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com.cn
