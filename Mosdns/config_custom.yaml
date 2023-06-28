@@ -15,31 +15,19 @@ plugins:
       files:
         - "/var/mosdns/geoip_cn.txt"
         - "/var/mosdns/geoip_private.txt"
-  - tag: geosite_cn
+  - tag: local_domain
     type: domain_set
     args:
       files:
         - "/var/mosdns/geosite_cn.txt"
-  - tag: geosite_no_cn
+        - "/var/mosdns/geosite_tld-cn.txt"
+        - "/var/mosdns/geosite_category-games@cn.txt"
+        - "/var/mosdns/geosite_icloud.txt"
+  - tag: remote_domain
     type: domain_set
     args:
       files:
         - "/var/mosdns/geosite_geolocation-!cn.txt"
-  - tag: geosite_tld_cn
-    type: domain_set
-    args:
-      files:
-        - "/var/mosdns/geosite_tld-cn.txt"
-  - tag: geosite_game_cn
-    type: domain_set
-    args:
-      files:
-        - "/var/mosdns/geosite_category-games@cn.txt"
-  - tag: geosite_icloud
-    type: domain_set
-    args:
-      files:
-        - "/var/mosdns/geosite_icloud.txt"
   - tag: geosite_private
     type: domain_set
     args:
@@ -113,9 +101,9 @@ plugins:
   - tag: has_resp_sequence
     type: sequence
     args:
-      - matches: "qname { $whitelist | $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_icloud }"
+      - matches: "qname { $whitelist | $local_domain }"
         exec: $modify_ttl
-      - matches: "!qname { $whitelist | $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_icloud }"
+      - matches: "!qname { $whitelist | $local_domain }"
         exec: $modify_fake_ttl
       - matches: has_resp
         exec: accept
@@ -157,13 +145,13 @@ plugins:
   - tag: query_is_local_domain
     type: sequence
     args:
-      - matches: "qname { $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_icloud }"
+      - matches: "qname $local_domain"
         exec: $local_sequence
   # 查询是否为 国外域名
   - tag: query_is_no_local_domain
     type: sequence
     args:
-      - matches: "qname $geosite_no_cn"
+      - matches: "qname $remote_domain"
         exec: $remote_sequence
   # 查询是否为 DDNS 域名
   - tag: query_is_ddns_domain
@@ -240,7 +228,7 @@ plugins:
       - exec: $query_is_ddns_domain
       - exec: jump has_resp_sequence
       - matches:
-        - "qname { $whitelist | $geosite_cn | $geosite_tld_cn | $geosite_game_cn | $geosite_icloud }"
+        - "qname { $whitelist | $local_domain }"
         exec: $lazy_cache
       - exec: $query_is_whitelist_domain
       - exec: jump has_resp_sequence
