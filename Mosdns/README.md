@@ -1,6 +1,6 @@
 # 个人适用的Openwrt MosDNS插件V5版本 自定义配置 
 
-AdGuardHome 直接监听53端口，不使用Dnsmasq，设置上游127.0.0.1:5335
+AdGuardHome 直接监听53端口，不使用dnsmasq，dnsmasq监听端口改为54。agh设置上游127.0.0.1:5335，反向dns服务器为127.0.0.1:54
 
 MosDNS 监听端口为5335, 设置上游127.0.0.1:7874 & 国内dot服务器
 
@@ -17,5 +17,6 @@ geosite_category-games@cn
 
 geosite_icloud
 
+geosite_apple
 
 #兼容OpenWRT内MosDNS的luci管理页面，可直接在 MosDNS/RULE LIST/各个名单 内直接添加自定义规则并直接应用，不再局限于插件本身的【规则列表仅适用于 “内置预设” 配置文件】限制
