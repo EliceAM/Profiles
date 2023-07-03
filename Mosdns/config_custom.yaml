@@ -21,6 +21,7 @@ plugins:
         - "/var/mosdns/geosite_cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
         - "/var/mosdns/geosite_category-games@cn.txt"
+        - "/var/mosdns/geosite_apple.txt"
         - "/var/mosdns/geosite_icloud.txt"
   - tag: remote_domain
     type: domain_set
