@@ -21,7 +21,7 @@ plugins:
         - "/var/mosdns/geosite_cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
         - "/var/mosdns/geosite_category-games@cn.txt"
-        - "/var/mosdns/geosite_apple.txt"
+        - "/var/mosdns/geosite_apple-cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
   - tag: remote_domain
     type: domain_set
@@ -78,10 +78,10 @@ plugins:
   - tag: lazy_cache
     type: cache
     args:
-      size: 10240
-      lazy_cache_ttl: 259200
+      size: 1024
+      lazy_cache_ttl: 86400
       dump_file: "/etc/mosdns/cache.dump"
-      dump_interval: 600    
+      dump_interval: 600  
   # 国内响应并修改ttl 600
   - tag: modify_ttl
     type: sequence
@@ -110,12 +110,9 @@ plugins:
     args:
       concurrent: 3
       upstreams:
-        - addr: tls://223.5.5.5
-          idle_timeout: 10
-        - addr: tls://1.12.12.12
+        - addr: tls://223.5.5.5:853
+        - addr: tls://1.12.12.12:853
           enable_pipeline: true
-          max_conns: 2
-          idle_timeout: 10
 
   # 转发到openclash
   - tag: forward_remote
@@ -128,11 +125,17 @@ plugins:
     type: sequence
     args:
       - exec: $forward_local
+  # 国外解析优先V4
+  - tag: remote_sequence4
+    type: sequence
+    args:
+      - exec: prefer_ipv4
+      - exec: $forward_remote
   # 国外解析
   - tag: remote_sequence
     type: sequence
     args:
-      - exec: prefer_ipv4
+      - exec: prefer_ipv6
       - exec: $forward_remote
 
   ## > 解析判断逻辑
@@ -165,7 +168,7 @@ plugins:
     type: sequence
     args:
       - matches: "qname $greylist"
-        exec: $remote_sequence
+        exec: $remote_sequence4
 
   ## > 黑名单&广告拦截
   # 拦截名单
@@ -232,6 +235,12 @@ plugins:
   # 启动 udp 服务器
   - tag: udp_server
     type: udp_server
+    args:
+      entry: main_sequence
+      listen: ":5335"
+  # 启动 tcp 服务器。
+  - tag: tcp_server
+    type: tcp_server
     args:
       entry: main_sequence
       listen: ":5335"
