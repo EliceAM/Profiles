@@ -5,9 +5,6 @@ DOMAIN-SUFFIX,apkmirror.com
 # Arcaea Wiki
 DOMAIN-SUFFIX,wiki.arcaea.cn
 
-# Dmhy
-DOMAIN-SUFFIX,dmhy.org
-
 # Linux
 DOMAIN-SUFFIX,proxmox.com
 DOMAIN-SUFFIX,openwrt.org
