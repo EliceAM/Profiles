@@ -9,11 +9,6 @@ include: []
 plugins:
 
  ## > GeoSite 规则
-  - tag: local_ip
-    type: ip_set
-    args:
-      files:
-        - "/var/mosdns/geoip_cn.txt"
   - tag: local_domain
     type: domain_set
     args:
@@ -30,18 +25,7 @@ plugins:
         - "/var/mosdns/geosite_geolocation-!cn.txt"
 
  ## > OpenWrt luci 网页规则
- # 白名单 加入的域名始终允许使用 “国内解析” 进行解析
-  - tag: whitelist
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/whitelist.txt"
-  # 黑名单 加入的域名将屏蔽 DNS 解析
-  - tag: blocklist
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/blocklist.txt"
+
   # 灰名单 加入的域名始终使用 “国外解析” 进行解析
   - tag: greylist
     type: domain_set
@@ -60,18 +44,6 @@ plugins:
     args:
       files:
         - "/etc/mosdns/rule/hosts.txt"
-  # 重定向请求的域名
-  - tag: redirect
-    type: redirect
-    args:
-      files:
-        - "/etc/mosdns/rule/redirect.txt"
-  # PTR 黑名单 加入的域名将阻止 PTR 请求
-  - tag: local_ptr
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/local-ptr.txt"
 
   ## > 缓存设置
   # 缓存
@@ -81,25 +53,27 @@ plugins:
       size: 1024
       lazy_cache_ttl: 86400
       dump_file: "/etc/mosdns/cache.dump"
-      dump_interval: 600  
+      dump_interval: 600
+
   # 国内响应并修改ttl 600
   - tag: modify_ttl
     type: sequence
     args:
-      - exec: ttl 600-3600   
+      - exec: ttl 600-3600
+
   # 国外响应并修改ttl 5
   - tag: modify_fake_ttl
     type: sequence
     args:
       - exec: ttl 5-5
+
   # 有响应则修改 TTL 
   - tag: has_resp_sequence
     type: sequence
     args:
-      - matches: "qname { $whitelist | $local_domain }"
+      - exec: $modify_fake_ttl
+      - matches: "qname $local_domain"
         exec: $modify_ttl
-      - matches: "!qname { $whitelist | $local_domain }"
-        exec: $modify_fake_ttl
       - matches: has_resp
         exec: accept
 
@@ -120,17 +94,20 @@ plugins:
     args:
       upstreams:
         - addr: 127.0.0.1:7874
+
   # 国内解析
   - tag: local_sequence
     type: sequence
     args:
       - exec: $forward_local
+
   # 国外解析优先V4
   - tag: remote_sequence4
     type: sequence
     args:
       - exec: prefer_ipv4
       - exec: $forward_remote
+
   # 国外解析
   - tag: remote_sequence
     type: sequence
@@ -145,24 +122,21 @@ plugins:
     args:
       - matches: "qname $local_domain"
         exec: $local_sequence
+
   # 查询是否为 国外域名
   - tag: query_is_no_local_domain
     type: sequence
     args:
       - matches: "qname $remote_domain"
         exec: $remote_sequence
+
   # 查询是否为 DDNS 域名
   - tag: query_is_ddns_domain
     type: sequence
     args:
       - matches: "qname $ddnslist"
         exec: $local_sequence
-  # 查询是否为 白名单
-  - tag: query_is_whitelist_domain
-    type: sequence
-    args:
-      - matches: "qname $whitelist"
-        exec: $local_sequence
+
   # 查询是否为 灰名单
   - tag: query_is_greylist_domain
     type: sequence
@@ -170,39 +144,12 @@ plugins:
       - matches: "qname $greylist"
         exec: $remote_sequence4
 
-  ## > 黑名单&广告拦截
-  # 拦截名单
-  - tag: query_is_reject_domain
-    type: sequence
-    args:
-      - matches: "qname $blocklist"
-        exec: reject 3
-      - matches:
-        - qtype 12
-        - "qname $local_ptr"
-        exec: reject 3
-      - matches: qtype 65
-        exec: reject 3
-
-  ## > fallback
-  # 返回非国内 ip 则 drop_resp
-  - tag: query_is_local_ip
-    type: sequence
-    args:
-      - exec: $local_sequence
-      - matches: "!resp_ip $local_ip"
-        exec: drop_resp
-  # 用远程服务器 
-  - tag: query_is_remote
-    type: sequence
-    args:
-      - exec: $remote_sequence
   # fallback 用远程服务器 
   - tag: fallback
     type: fallback
     args:
-      primary: query_is_local_ip
-      secondary: query_is_remote
+      primary: remote_sequence
+      secondary: local_sequence
       threshold: 500
       always_standby: true
 
@@ -213,17 +160,11 @@ plugins:
     args:
       - exec: $hosts
       - exec: jump has_resp_sequence
-      - exec: $redirect
-      - exec: jump has_resp_sequence
       - exec: $query_is_ddns_domain
       - exec: jump has_resp_sequence
       - matches:
-        - "qname { $whitelist | $local_domain }"
+        - "qname $local_domain"
         exec: $lazy_cache
-      - exec: $query_is_whitelist_domain
-      - exec: jump has_resp_sequence
-      - exec: $query_is_reject_domain
-      - exec: jump has_resp_sequence
       - exec: $query_is_greylist_domain
       - exec: jump has_resp_sequence
       - exec: $query_is_local_domain
