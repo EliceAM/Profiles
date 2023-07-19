@@ -20,4 +20,5 @@ geosite_icloud
 geosite_apple-cn
 
 #兼容OpenWRT内MosDNS的luci管理页面，可直接在 MosDNS/RULE LIST/各个名单 内直接添加自定义规则并直接应用，不再局限于插件本身的【规则列表仅适用于 “内置预设” 配置文件】限制
+
 #由于PTR、黑名单已由下游的AGH提供，白名单会导致上游openclash在特殊情况下分流错误（如mosdns的GeoData和OpenClash的版本不匹配，且刚好访问该网站时）已不再网页管理端支持这三项的修改
