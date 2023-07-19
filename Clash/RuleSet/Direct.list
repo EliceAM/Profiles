@@ -19,9 +19,6 @@ DOMAIN-SUFFIX,test-ipv6.com
 # Mail
 DOMAIN-SUFFIX,hotmail.com
 
-# NTP
-DOMAIN-KEYWORD,pool.ntp.org
-
 # Qnap
 DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com.cn
