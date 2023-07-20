@@ -14,12 +14,12 @@ DOMAIN-SUFFIX,openwrt.org
 DOMAIN-SUFFIX,kernel.org
 DOMAIN-SUFFIX,raw.githubusercontent.com
 DOMAIN-SUFFIX,cp.cloudflare.com
+DOMAIN-SUFFIX,docker.com
+DOMAIN-SUFFIX,docker.io
 
 # Qnap
 DOMAIN-SUFFIX,ncsi.qnap.com
 DOMAIN-SUFFIX,qnapclub.eu
-DOMAIN-SUFFIX,cloudflare.docker.com
-DOMAIN-SUFFIX,docker.io
 DOMAIN-SUFFIX,clamav.net
 
 # Proxy
