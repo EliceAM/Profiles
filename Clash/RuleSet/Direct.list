@@ -15,6 +15,7 @@ DOMAIN-SUFFIX,hnair.com
 
 # IPV6
 DOMAIN-SUFFIX,test-ipv6.com
+DOMAIN-SUFFIX,icmpcheckv6.popcount.org
 
 # Mail
 DOMAIN-SUFFIX,hotmail.com
