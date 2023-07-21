@@ -20,6 +20,9 @@ DOMAIN-SUFFIX,icmpcheckv6.popcount.org
 # Mail
 DOMAIN-SUFFIX,hotmail.com
 
+# NTP
+DOMAIN-SUFFIX,ntp.tuna.tsinghua.edu.cn
+
 # Qnap
 DOMAIN-KEYWORD,myqnapcloud
 DOMAIN-SUFFIX,qnap.com.cn
