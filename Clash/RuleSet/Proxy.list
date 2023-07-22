@@ -1,4 +1,8 @@
-### IPV4 pref
+### IPV4 pref ###
+
+# Image
+DOMAIN-SUFFIX,imgur.com
+
 # Media info
 DOMAIN-SUFFIX,tmdb.org
 DOMAIN-SUFFIX,themoviedb.org
@@ -23,7 +27,8 @@ DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,clamav.net
 
 
-### Proxy
+### Proxy ###
+
 # Android
 DOMAIN-SUFFIX,apkpure.com
 DOMAIN-SUFFIX,apkmirror.com
@@ -37,7 +42,6 @@ DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,diverse.direct
 
 # The Others
-DOMAIN-SUFFIX,imgur.com
 DOMAIN-SUFFIX,libtorrent.org
 DOMAIN-SUFFIX,nyaa.si
 DOMAIN-SUFFIX,gmgard.com
