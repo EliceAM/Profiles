@@ -2,8 +2,6 @@
 DOMAIN-SUFFIX,lowiro.com
 
 # Torrent
-DOMAIN-SUFFIX,daydream.dmhy.best
-DOMAIN-SUFFIX,dmhy.org
 DOMAIN-KEYWORD,announce
 DOMAIN-KEYWORD,torrent
 DOMAIN-KEYWORD,tracker
