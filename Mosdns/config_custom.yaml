@@ -25,7 +25,6 @@ plugins:
         - "/var/mosdns/geosite_geolocation-!cn.txt"
 
  ## > OpenWrt luci 网页规则
-
   # 灰名单 加入的域名始终使用 “国外解析” 进行解析
   - tag: greylist
     type: domain_set
@@ -101,18 +100,10 @@ plugins:
     args:
       - exec: $forward_local
 
-  # 国外解析优先V4
-  - tag: remote_sequence4
-    type: sequence
-    args:
-      - exec: prefer_ipv4
-      - exec: $forward_remote
-
   # 国外解析
   - tag: remote_sequence
     type: sequence
     args:
-      - exec: prefer_ipv6
       - exec: $forward_remote
 
   ## > 解析判断逻辑
@@ -142,7 +133,7 @@ plugins:
     type: sequence
     args:
       - matches: "qname $greylist"
-        exec: $remote_sequence4
+        exec: $remote_sequence
 
   # fallback 用远程服务器 
   - tag: fallback
