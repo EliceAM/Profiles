@@ -1,16 +1,12 @@
-### IPV4 pref ###
+# Android
+DOMAIN-SUFFIX,apkpure.com
+DOMAIN-SUFFIX,apkmirror.com
+
+# Arcaea Wiki
+DOMAIN-SUFFIX,wiki.arcaea.cn
 
 # Image
 DOMAIN-SUFFIX,imgur.com
-
-# Media info
-DOMAIN-SUFFIX,tmdb.org
-DOMAIN-SUFFIX,themoviedb.org
-DOMAIN-SUFFIX,fanart.tv
-DOMAIN-SUFFIX,tinymediamanager.org
-DOMAIN-SUFFIX,opensubtitles.org
-DOMAIN-SUFFIX,nastool.org
-DOMAIN-SUFFIX,nastool.workers.dev
 
 # Linux
 DOMAIN-SUFFIX,proxmox.com
@@ -21,25 +17,28 @@ DOMAIN-SUFFIX,cp.cloudflare.com
 DOMAIN-SUFFIX,docker.com
 DOMAIN-SUFFIX,docker.io
 
-# Qnap
-DOMAIN-SUFFIX,ncsi.qnap.com
-DOMAIN-SUFFIX,qnapclub.eu
-DOMAIN-SUFFIX,clamav.net
+#  Iwara
+DOMAIN-SUFFIX,iwara.tv
+DOMAIN-SUFFIX,ingest.sentry.io
 
-
-### Proxy ###
-
-# Android
-DOMAIN-SUFFIX,apkpure.com
-DOMAIN-SUFFIX,apkmirror.com
-
-# Arcaea Wiki
-DOMAIN-SUFFIX,wiki.arcaea.cn
+# Media info
+DOMAIN-SUFFIX,tmdb.org
+DOMAIN-SUFFIX,themoviedb.org
+DOMAIN-SUFFIX,fanart.tv
+DOMAIN-SUFFIX,tinymediamanager.org
+DOMAIN-SUFFIX,opensubtitles.org
+DOMAIN-SUFFIX,nastool.org
+DOMAIN-SUFFIX,nastool.workers.dev
 
 # Music
 DOMAIN-SUFFIX,doujinstyle.com
 DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,diverse.direct
+
+# Qnap
+DOMAIN-SUFFIX,ncsi.qnap.com
+DOMAIN-SUFFIX,qnapclub.eu
+DOMAIN-SUFFIX,clamav.net
 
 # The Others
 DOMAIN-SUFFIX,libtorrent.org
