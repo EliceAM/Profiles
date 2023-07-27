@@ -2,9 +2,6 @@
 DOMAIN-SUFFIX,apkpure.com
 DOMAIN-SUFFIX,apkmirror.com
 
-# Arcaea Wiki
-DOMAIN-SUFFIX,wiki.arcaea.cn
-
 # Image
 DOMAIN-SUFFIX,imgur.com
 
@@ -39,6 +36,10 @@ DOMAIN-SUFFIX,diverse.direct
 DOMAIN-SUFFIX,ncsi.qnap.com
 DOMAIN-SUFFIX,qnapclub.eu
 DOMAIN-SUFFIX,clamav.net
+
+# Wiki
+DOMAIN-KEYWORD,wiki.
+DOMAIN-KEYWORD,.wiki
 
 # The Others
 DOMAIN-SUFFIX,libtorrent.org
