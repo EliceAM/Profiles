@@ -1,4 +1,7 @@
 # 个人自用OpenClash配置文件
 
-因为自建的subconverter服务器是无法处理meta内核特有的geosite规则，故权衡后基础规则使用原版subconverter可用的通用clash配置模板
+因为自建的subconverter服务器无法处理meta内核特有的geosite规则，故使用原版subconverter可用的通用clash配置模板
+
+注意OpenClash需要开启绕过大陆IP功能！
+
 
