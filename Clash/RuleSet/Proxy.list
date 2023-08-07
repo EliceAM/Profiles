@@ -32,6 +32,10 @@ DOMAIN-SUFFIX,doujinstyle.com
 DOMAIN-SUFFIX,mikudb.moe
 DOMAIN-SUFFIX,diverse.direct
 
+# PT
+DOMAIN-SUFFIX,kamept.com
+DOMAIN-SUFFIX,dmhy.org
+
 # Qnap
 DOMAIN-SUFFIX,ncsi.qnap.com
 DOMAIN-SUFFIX,qnapclub.eu
