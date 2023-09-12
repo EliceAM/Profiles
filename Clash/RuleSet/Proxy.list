@@ -7,12 +7,14 @@ DOMAIN-SUFFIX,imgur.com
 
 # Linux
 DOMAIN-SUFFIX,proxmox.com
+DOMAIN-SUFFIX,unraid.net
 DOMAIN-SUFFIX,openwrt.org
 DOMAIN-SUFFIX,kernel.org
 DOMAIN-SUFFIX,raw.githubusercontent.com
 DOMAIN-SUFFIX,cp.cloudflare.com
 DOMAIN-SUFFIX,docker.com
 DOMAIN-SUFFIX,docker.io
+
 
 #  Iwara
 DOMAIN-SUFFIX,iwara.tv
@@ -35,11 +37,6 @@ DOMAIN-SUFFIX,diverse.direct
 # PT
 DOMAIN-SUFFIX,kamept.com
 DOMAIN-SUFFIX,dmhy.org
-
-# Qnap
-DOMAIN-SUFFIX,ncsi.qnap.com
-DOMAIN-SUFFIX,qnapclub.eu
-DOMAIN-SUFFIX,clamav.net
 
 # Wiki
 DOMAIN-KEYWORD,wiki.
