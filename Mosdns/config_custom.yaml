@@ -54,28 +54,6 @@ plugins:
       dump_file: "/etc/mosdns/cache.dump"
       dump_interval: 600
 
-  # 国内响应并修改ttl 600
-  - tag: modify_ttl
-    type: sequence
-    args:
-      - exec: ttl 600-3600
-
-  # 国外响应并修改ttl 5
-  - tag: modify_fake_ttl
-    type: sequence
-    args:
-      - exec: ttl 5-5
-
-  # 有响应则修改 TTL 
-  - tag: has_resp_sequence
-    type: sequence
-    args:
-      - exec: $modify_fake_ttl
-      - matches: "qname $local_domain"
-        exec: $modify_ttl
-      - matches: has_resp
-        exec: accept
-
   ## > 转发和解析设置
   # 转发到国内DNS服务器
   - tag: forward_local
@@ -94,55 +72,47 @@ plugins:
       upstreams:
         - addr: 127.0.0.1:7874
 
-  # 国内解析
-  - tag: local_sequence
-    type: sequence
-    args:
-      - exec: $forward_local
-
-  # 国外解析
-  - tag: remote_sequence
-    type: sequence
-    args:
-      - exec: $forward_remote
-
   ## > 解析判断逻辑
   # 查询是否为 国内域名
   - tag: query_is_local_domain
     type: sequence
     args:
       - matches: "qname $local_domain"
-        exec: $local_sequence
+        exec: $forward_local
 
   # 查询是否为 国外域名
-  - tag: query_is_no_local_domain
+  - tag: query_is_global_domain
     type: sequence
     args:
       - matches: "qname $remote_domain"
-        exec: $remote_sequence
+        exec: $forward_remote
 
   # 查询是否为 DDNS 域名
   - tag: query_is_ddns_domain
     type: sequence
     args:
       - matches: "qname $ddnslist"
-        exec: $local_sequence
+        exec: $forward_local
 
   # 查询是否为 灰名单
   - tag: query_is_greylist_domain
     type: sequence
     args:
+      - exec: prefer_ipv4
       - matches: "qname $greylist"
-        exec: $remote_sequence
+        exec: $forward_remote
 
-  # fallback 用远程服务器 
-  - tag: fallback
-    type: fallback
+
+  # 有响应则修改 TTL 
+  - tag: has_resp
+    type: sequence
     args:
-      primary: remote_sequence
-      secondary: local_sequence
-      threshold: 500
-      always_standby: true
+      - exec: ttl 5-5
+      - matches: "qname $local_domain"
+        exec: ttl 600-3600
+      - matches: has_resp
+        exec: accept
+
 
   ## > 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
@@ -150,19 +120,20 @@ plugins:
     type: sequence
     args:
       - exec: $hosts
-      - exec: jump has_resp_sequence
+      - exec: jump has_resp
       - exec: $query_is_ddns_domain
-      - exec: jump has_resp_sequence
+      - exec: jump has_resp
       - matches:
         - "qname $local_domain"
         exec: $lazy_cache
       - exec: $query_is_greylist_domain
-      - exec: jump has_resp_sequence
+      - exec: jump has_resp
       - exec: $query_is_local_domain
-      - exec: jump has_resp_sequence
-      - exec: $query_is_no_local_domain
-      - exec: jump has_resp_sequence
-      - exec: $fallback
+      - exec: jump has_resp
+      - exec: $query_is_global_domain
+      - exec: jump has_resp
+      - exec: $forward_remote
+      - exec: ttl 5-5
 
   # 启动 udp 服务器
   - tag: udp_server
