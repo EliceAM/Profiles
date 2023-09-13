@@ -18,11 +18,6 @@ plugins:
         - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple-cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
-  - tag: remote_domain
-    type: domain_set
-    args:
-      files:
-        - "/var/mosdns/geosite_geolocation-!cn.txt"
 
  ## > OpenWrt luci 网页规则
   # 灰名单 加入的域名始终使用 “国外解析” 进行解析
@@ -72,6 +67,13 @@ plugins:
       upstreams:
         - addr: 127.0.0.1:7874
 
+  # 优先V4解析
+  - tag: remote_prefer4
+    type: sequence
+    args:
+      - exec: prefer_ipv4
+      - exec: $forward_remote
+
   ## > 解析判断逻辑
   # 查询是否为 国内域名
   - tag: query_is_local_domain
@@ -79,13 +81,6 @@ plugins:
     args:
       - matches: "qname $local_domain"
         exec: $forward_local
-
-  # 查询是否为 国外域名
-  - tag: query_is_global_domain
-    type: sequence
-    args:
-      - matches: "qname $remote_domain"
-        exec: $forward_remote
 
   # 查询是否为 DDNS 域名
   - tag: query_is_ddns_domain
@@ -98,10 +93,8 @@ plugins:
   - tag: query_is_greylist_domain
     type: sequence
     args:
-      - exec: prefer_ipv4
       - matches: "qname $greylist"
-        exec: $forward_remote
-
+        exec: $remote_prefer4
 
   # 有响应则修改 TTL 
   - tag: has_resp
@@ -113,7 +106,6 @@ plugins:
       - matches: has_resp
         exec: accept
 
-
   ## > 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
   - tag: main_sequence
@@ -123,14 +115,12 @@ plugins:
       - exec: jump has_resp
       - exec: $query_is_ddns_domain
       - exec: jump has_resp
+      - exec: $query_is_greylist_domain
+      - exec: jump has_resp
       - matches:
         - "qname $local_domain"
         exec: $lazy_cache
-      - exec: $query_is_greylist_domain
-      - exec: jump has_resp
       - exec: $query_is_local_domain
-      - exec: jump has_resp
-      - exec: $query_is_global_domain
       - exec: jump has_resp
       - exec: $forward_remote
       - exec: ttl 5-5
