@@ -61,12 +61,17 @@ plugins:
         - addr: tls://1.12.12.12:853
           enable_pipeline: true
 
-  # 转发到OpenClash
-  - tag: forward_openclash
-    type: forward
+  # 国内解析
+  - tag: direct_sequence
+    type: sequence
     args:
-      upstreams:
-        - addr: 192.168.10.2:7874
+      - exec: $forward_local
+
+  # 国外解析
+  - tag: gfw_sequence
+    type: sequence
+    args:
+      - exec: forward 192.168.10.2:7874
 
   ## > 解析判断逻辑
   # 判断cloudflare_cidr并修改ttl
@@ -82,7 +87,7 @@ plugins:
     type: sequence
     args:
       - matches: has_resp
-        exec: modify_resp
+        exec: $modify_resp
 
   # 结束响应
   - tag: accept_resp
@@ -96,7 +101,7 @@ plugins:
     type: sequence
     args:
       - matches: "qname $gfw_domain"
-        exec: $forward_openclash
+        exec: $gfw_sequence
 
   # 查询是否为 direct域名
   - tag: query_is_direct_domain
@@ -110,16 +115,16 @@ plugins:
   - tag: query_is_direct
     type: sequence
     args:
-      - exec: $local_sequence
-      - matches: "!resp_ip { $cloudflare_cidr | $geoip_cn }"
+      - exec: $direct_sequence
+      - matches: "!resp_ip $geoip_cn $cloudflare_cidr"
         exec: drop_resp
-      - exec: modify_resp
+      - exec: $modify_resp
 
   # fallback 用远程服务器 sequence
   - tag: query_is_remote
     type: sequence
     args:
-      - exec: $forward_openclash
+      - exec: $gfw_sequence
 
   # fallback 并发
   - tag: fallback
