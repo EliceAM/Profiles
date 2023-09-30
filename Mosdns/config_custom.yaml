@@ -2,13 +2,13 @@ log:
   level: info
   file: "/tmp/mosdns.log"
 
-# API 入口设置
+  ## API 入口设置
 api:
   http: "0.0.0.0:9091"
 include: []
 plugins:
 
- ## > GeoSite 规则
+  ## > GeoSite 规则
   - tag: local_domain
     type: domain_set
     args:
@@ -18,26 +18,17 @@ plugins:
         - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple-cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
-
- ## > OpenWrt luci 网页规则
-  # 灰名单 加入的域名始终使用 “国外解析” 进行解析
-  - tag: greylist
-    type: domain_set
+  ## > cloudflare_ip
+  - tag: cloudflare_ip
+    type: ip_set
     args:
-      files:
-        - "/etc/mosdns/rule/greylist.txt"
-  # DDNS域名 加入的域名始终使用 “本地 DNS” 进行解析，并且修改 TTL 为 5 秒，解析结果不进行缓存
-  - tag: ddnslist
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/ddnslist.txt"
-  # 自定义 Hosts 重写
-  - tag: hosts
-    type: hosts
-    args:
-      files:
-        - "/etc/mosdns/rule/hosts.txt"
+      ips:
+        - "1.1.1.0/24"
+        - "1.0.0.0/24"
+        - "162.158.0.0/15"
+        - "104.16.0.0/12"
+        - "172.64.0.0/13"
+        - "2606:4700::/32"
 
   ## > 缓存设置
   # 缓存
@@ -60,70 +51,55 @@ plugins:
         - addr: tls://1.12.12.12:853
           enable_pipeline: true
 
-  # 转发到openclash
+  # 转发到OpenClash
   - tag: forward_remote
     type: forward
     args:
       upstreams:
-        - addr: 127.0.0.1:7874
-
-  # 优先V4解析
-  - tag: remote_prefer4
-    type: sequence
-    args:
-      - exec: prefer_ipv4
-      - exec: $forward_remote
+        - addr: 192.168.10.2:7874
 
   ## > 解析判断逻辑
+  # 接受响应并修改ttl
+  - tag: accept_resp
+    type: sequence
+    args:
+      - exec: ttl 600-3600
+      - exec: accept
+      
+  # 优选cloudflare_ip
+  - tag: response_cloudflare_ip
+    type: sequence
+    args:
+      - matches: "resp_ip $cloudflare_ip"
+        exec: black_hole 104.20.19.35 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
+      - exec: $accept_resp    
+        
   # 查询是否为 国内域名
   - tag: query_is_local_domain
     type: sequence
     args:
       - matches: "qname $local_domain"
         exec: $forward_local
-
-  # 查询是否为 DDNS 域名
-  - tag: query_is_ddns_domain
+        
+  # 有响应则接受
+  - tag: has_resp_sequence
     type: sequence
     args:
-      - matches: "qname $ddnslist"
-        exec: $forward_local
-
-  # 查询是否为 灰名单
-  - tag: query_is_greylist_domain
-    type: sequence
-    args:
-      - matches: "qname $greylist"
-        exec: $remote_prefer4
-
-  # 有响应则修改 TTL 
-  - tag: has_resp
-    type: sequence
-    args:
-      - exec: ttl 5-5
-      - matches: "qname $local_domain"
-        exec: ttl 600-3600
       - matches: has_resp
-        exec: accept
-
+        exec: $response_cloudflare_ip
+        
   ## > 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
   - tag: main_sequence
     type: sequence
     args:
-      - exec: $hosts
-      - exec: jump has_resp
-      - exec: $query_is_ddns_domain
-      - exec: jump has_resp
-      - exec: $query_is_greylist_domain
-      - exec: jump has_resp
       - matches:
         - "qname $local_domain"
         exec: $lazy_cache
       - exec: $query_is_local_domain
-      - exec: jump has_resp
+      - exec: $has_resp_sequence
+      - exec: jump has_resp_sequence
       - exec: $forward_remote
-      - exec: ttl 5-5
 
   # 启动 udp 服务器
   - tag: udp_server
