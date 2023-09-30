@@ -26,6 +26,7 @@ plugins:
         - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple-cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
+        - "/var/mosdns/geosite_microsoft@cn.txt"
         - "/etc/mosdns/rule/whitelist.txt"
 
   # > cloudflare_cidr规则
@@ -144,10 +145,10 @@ plugins:
       - matches:
         - "qname $direct_domain"
         exec: $lazy_cache
+      - exec: $query_is_gfw_domain
+      - exec: jump accept_resp
       - exec: $query_is_direct_domain
       - exec: $need_modify
-      - exec: jump accept_resp
-      - exec: $query_is_gfw_domain
       - exec: jump accept_resp
       - exec: $fallback
 
