@@ -21,7 +21,7 @@ plugins:
     type: domain_set
     args:
       files:
-        - "/var/mosdns/geosite_geolocation-cn.txt"
+        - "/var/mosdns/geosite_cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
         - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple-cn.txt"
