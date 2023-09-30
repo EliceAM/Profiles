@@ -2,36 +2,46 @@ log:
   level: info
   file: "/tmp/mosdns.log"
 
-  ## API 入口设置
+# API 入口设置
 api:
   http: "0.0.0.0:9091"
 include: []
 plugins:
 
-  ## > GeoSite 规则
-  - tag: local_domain
+  ## > 外部资源
+  # GeoSite gfw规则 + OpenWrt luci 网页 灰名单 规则
+  - tag: gfw_domain
     type: domain_set
     args:
       files:
-        - "/var/mosdns/geosite_cn.txt"
+        - "/var/mosdns/geosite_gfw.txt"
+        - "/etc/mosdns/rule/greylist.txt"
+  # GeoSite direct规则 + OpenWrt luci网页 白名单 规则
+  - tag: direct_domain
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_geolocation-cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
         - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple-cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
-  ## > cloudflare_ip
-  - tag: cloudflare_ip
+        - "/var/mosdns/geosite_microsoft@cn.txt"
+        - "/etc/mosdns/rule/whitelist.txt"
+  # cloudflare_cidr规则
+  - tag: cloudflare_cidr
     type: ip_set
     args:
-      ips:
-        - "1.1.1.0/24"
-        - "1.0.0.0/24"
-        - "162.158.0.0/15"
-        - "104.16.0.0/12"
-        - "172.64.0.0/13"
-        - "2606:4700::/32"
+      files:
+        - "/etc/mosdns/rule/cloudflare-cidr.txt"
+  # 国内ip
+  - tag: geoip_cn
+    type: ip_set
+    args:
+      files:
+        - "/var/mosdns/geoip_cn.txt"
 
   ## > 缓存设置
-  # 缓存
   - tag: lazy_cache
     type: cache
     args:
@@ -41,6 +51,49 @@ plugins:
       dump_interval: 600
 
   ## > 转发和解析设置
+  # 修改 ttl 
+  - tag: modify_ttl
+    type: sequence
+    args:
+      - exec: ttl 600-3600
+  # 不是fakeip则修改ttl，并终止有应答的响应
+  - tag: has_resp_sequence
+    type: sequence
+    args:
+      - matches: "!resp_ip 198.18.0.0/16"
+        exec: $modify_ttl
+      - matches: has_resp
+        exec: accept
+
+  # 优选cloudflare_cidr
+  - tag: modify_cf
+    type: sequence
+    args:
+      - exec: black_hole 104.20.19.35 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
+      - exec: $modify_ttl
+      - exec: accept
+
+  # ip属性判断
+  - tag: query_modify
+    type: sequence
+    args:
+      - matches: "resp_ip $cloudflare_cidr"
+        exec: $modify_cf
+      - matches: "resp_ip $geoip_cn"
+        exec: $has_resp_sequence
+
+  # 转发到openclash
+  - tag: forward_openclash
+    type: sequence
+    args:
+      - exec: forward 192.168.10.2:7874
+  # 对gfw域名进行解析
+  - tag: query_is_gfw_domain
+    type: sequence
+    args:
+      - matches: "qname $gfw_domain"
+        exec: $forward_openclash
+
   # 转发到国内DNS服务器
   - tag: forward_local
     type: forward
@@ -50,66 +103,32 @@ plugins:
         - addr: tls://223.5.5.5:853
         - addr: tls://1.12.12.12:853
           enable_pipeline: true
-
-  # 转发到OpenClash
-  - tag: forward_remote
-    type: forward
-    args:
-      upstreams:
-        - addr: 192.168.10.2:7874
-
-  ## > 解析判断逻辑
-  # 接受响应并修改ttl
-  - tag: accept_resp
-    type: sequence
-    args:
-      - exec: ttl 600-3600
-      - exec: accept
-      
-  # 优选cloudflare_ip
-  - tag: response_cloudflare_ip
-    type: sequence
-    args:
-      - matches: "resp_ip $cloudflare_ip"
-        exec: black_hole 104.20.19.35 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
-      - exec: $accept_resp    
-        
-  # 查询是否为 国内域名
+  # 对国内域名进行解析
   - tag: query_is_local_domain
     type: sequence
     args:
-      - matches: "qname $local_domain"
+      - matches: "qname $direct_domain"
         exec: $forward_local
-        
-  # 有响应则接受
-  - tag: has_resp_sequence
-    type: sequence
-    args:
-      - matches: has_resp
-        exec: $response_cloudflare_ip
-        
+
   ## > 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
   - tag: main_sequence
     type: sequence
     args:
       - matches:
-        - "qname $local_domain"
+        - "qname $direct_domain"
         exec: $lazy_cache
-      - exec: $query_is_local_domain
-      - exec: $has_resp_sequence
+      - exec: $query_is_gfw_domain
       - exec: jump has_resp_sequence
-      - exec: $forward_remote
+      - exec: $query_is_local_domain
+      - exec: jump has_resp_sequence
+      - exec: $forward_local
+      - exec: jump query_modify
+      - exec: $forward_openclash
 
   # 启动 udp 服务器
   - tag: udp_server
     type: udp_server
-    args:
-      entry: main_sequence
-      listen: ":5335"
-  # 启动 tcp 服务器。
-  - tag: tcp_server
-    type: tcp_server
     args:
       entry: main_sequence
       listen: ":5335"
