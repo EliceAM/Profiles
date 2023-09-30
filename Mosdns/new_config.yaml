@@ -1,0 +1,154 @@
+log:
+  level: info
+  file: "/tmp/mosdns.log"
+
+# API 入口设置
+api:
+  http: "0.0.0.0:9091"
+include: []
+plugins:
+
+  # > GeoSite gfw规则 + OpenWrt luci 网页 灰名单 规则
+  - tag: gfw_domain
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_gfw.txt"
+        - "/etc/mosdns/rule/greylist.txt"
+
+  # > GeoSite direct规则 + OpenWrt luci网页 白名单 规则
+  - tag: direct_domain
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_cn.txt"
+        - "/var/mosdns/geosite_tld-cn.txt"
+        - "/var/mosdns/geosite_category-games@cn.txt"
+        - "/var/mosdns/geosite_apple-cn.txt"
+        - "/var/mosdns/geosite_icloud.txt"
+        - "/etc/mosdns/rule/whitelist.txt"
+
+  # > cloudflare_cidr规则
+  - tag: cloudflare_cidr
+    type: ip_set
+    args:
+      files:
+        - "/etc/mosdns/rule/cloudflare-cidr.txt"
+  # 国内ip
+  - tag: geoip_cn
+    type: ip_set
+    args:
+      files:
+        - "/var/mosdns/geoip_cn.txt"
+  ## > 缓存设置
+  # 缓存
+  - tag: lazy_cache
+    type: cache
+    args:
+      size: 1024
+      lazy_cache_ttl: 86400
+      dump_file: "/etc/mosdns/cache.dump"
+      dump_interval: 600
+
+  ## > 转发和解析设置
+  # 转发到国内DNS服务器
+  - tag: forward_local
+    type: forward
+    args:
+      concurrent: 3
+      upstreams:
+        - addr: tls://223.5.5.5:853
+        - addr: tls://1.12.12.12:853
+          enable_pipeline: true
+
+  # 转发到OpenClash
+  - tag: forward_openclash
+    type: forward
+    args:
+      upstreams:
+        - addr: 192.168.10.2:7874
+
+  ## > 解析判断逻辑
+  # 判断cloudflare_cidr并修改ttl
+  - tag: modify_resp
+    type: sequence
+    args:
+      - matches: "resp_ip $cloudflare_cidr"
+        exec: black_hole 104.20.19.35 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
+      - exec: ttl 600-3600
+
+  # 判断响应并修改回报
+  - tag: need_modify
+    type: sequence
+    args:
+      - matches: has_resp
+        exec: modify_resp
+
+  # 结束响应
+  - tag: accept_resp
+    type: sequence
+    args:
+      - matches: has_resp
+        exec: accept
+
+  # 查询是否为 gfw域名
+  - tag: query_is_gfw_domain
+    type: sequence
+    args:
+      - matches: "qname $gfw_domain"
+        exec: $forward_openclash
+
+  # 查询是否为 direct域名
+  - tag: query_is_direct_domain
+    type: sequence
+    args:
+      - matches: "qname $direct_domain"
+        exec: $forward_local
+
+  # fallback 用本地服务器 sequence
+  # 返回非cloudflare_cidr或者国内ip 则 drop_resp
+  - tag: query_is_direct
+    type: sequence
+    args:
+      - exec: $local_sequence
+      - matches: "!resp_ip { $cloudflare_cidr | $geoip_cn }"
+        exec: drop_resp
+      - exec: modify_resp
+
+  # fallback 用远程服务器 sequence
+  - tag: query_is_remote
+    type: sequence
+    args:
+      - exec: $forward_openclash
+
+  # fallback 并发
+  - tag: fallback
+    type: fallback
+    args:
+      primary: query_is_direct
+      secondary: query_is_remote
+      threshold: 500
+      always_standby: true
+
+
+  ## > 主要的运行逻辑插件
+  # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
+  - tag: main_sequence
+    type: sequence
+    args:
+      - matches:
+        - "qname $direct_domain"
+        exec: $lazy_cache
+      - exec: $query_is_direct_domain
+      - exec: $need_modify
+      - exec: jump accept_resp
+      - exec: $query_is_gfw_domain
+      - exec: jump accept_resp
+      - exec: $fallback
+
+  # 启动 udp 服务器
+  - tag: udp_server
+    type: udp_server
+    args:
+      entry: main_sequence
+      listen: ":5335"
