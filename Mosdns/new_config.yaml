@@ -67,10 +67,10 @@ plugins:
   - tag: query_modify
     type: sequence
     args:
-      - matches: "qname $direct_domain"
-        exec: $modify_ttl
       - matches: "resp_ip $cloudflare_cidr"
         exec: $modify_cf
+      - matches: "qname $direct_domain"
+        exec: $modify_ttl
       - matches: "!resp_ip $geoip_cn"
         exec: return
 
