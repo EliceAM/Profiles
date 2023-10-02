@@ -45,7 +45,7 @@ plugins:
   - tag: lazy_cache
     type: cache
     args:
-      size: 1024
+      size: 10240
       lazy_cache_ttl: 86400
       dump_file: "/etc/mosdns/cache.dump"
       dump_interval: 600
@@ -55,7 +55,7 @@ plugins:
   - tag: modify_ttl
     type: sequence
     args:
-      - exec: ttl 600-3600
+      - exec: ttl 3-5
   # 不是fakeip则修改ttl，并终止有应答的响应
   - tag: has_resp_sequence
     type: sequence
@@ -86,7 +86,7 @@ plugins:
   - tag: forward_openclash
     type: sequence
     args:
-      - exec: forward 192.168.10.2:7874
+      - exec: forward 127.0.0.1:7874
   # 对gfw域名进行解析
   - tag: query_is_gfw_domain
     type: sequence
