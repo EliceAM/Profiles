@@ -27,6 +27,7 @@ plugins:
         - "/var/mosdns/geosite_apple-cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
         - "/var/mosdns/geosite_microsoft@cn.txt"
+        - "/var/mosdns/geosite_ookla-speedtest.txt"
         - "/etc/mosdns/rule/whitelist.txt"
   # cloudflare_cidr规则
   - tag: cloudflare_cidr
@@ -69,11 +70,11 @@ plugins:
   - tag: modify_cf
     type: sequence
     args:
-      - exec: black_hole 104.20.19.35 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
+      - exec: black_hole 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
       - exec: $modify_ttl
       - exec: accept
 
-  # ip属性判断
+  # IP区域分析
   - tag: query_modify
     type: sequence
     args:
@@ -87,14 +88,17 @@ plugins:
     type: sequence
     args:
       - exec: forward 127.0.0.1:7874
-  # 对gfw域名进行解析
-  - tag: query_is_gfw_domain
-    type: sequence
+    # 转发到公共DNS服务器
+  - tag: forward_public
+    type: forward
     args:
-      - matches: "qname $gfw_domain"
-        exec: $forward_openclash
-
-  # 转发到国内DNS服务器
+      concurrent: 3
+      upstreams:
+        - addr: tls://9.9.9.9:853
+          enable_pipeline: true
+        - addr: tls://94.140.14.14:853
+          enable_pipeline: true
+    # 转发到国内DNS服务器
   - tag: forward_local
     type: forward
     args:
@@ -103,6 +107,13 @@ plugins:
         - addr: tls://223.5.5.5:853
         - addr: tls://1.12.12.12:853
           enable_pipeline: true
+      
+  # 对gfw域名进行解析
+  - tag: query_is_gfw_domain
+    type: sequence
+    args:
+      - matches: "qname $gfw_domain"
+        exec: $forward_openclash
   # 对国内域名进行解析
   - tag: query_is_local_domain
     type: sequence
@@ -122,7 +133,7 @@ plugins:
       - exec: jump has_resp_sequence
       - exec: $query_is_local_domain
       - exec: jump has_resp_sequence
-      - exec: $forward_local
+      - exec: $forward_public
       - exec: jump query_modify
       - exec: $forward_openclash
 
