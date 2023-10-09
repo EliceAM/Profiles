@@ -88,16 +88,6 @@ plugins:
     type: sequence
     args:
       - exec: forward 127.0.0.1:7874
-    # 转发到公共DNS服务器
-  - tag: forward_public
-    type: forward
-    args:
-      concurrent: 3
-      upstreams:
-        - addr: tls://9.9.9.9:853
-          enable_pipeline: true
-        - addr: tls://94.140.14.14:853
-          enable_pipeline: true
     # 转发到国内DNS服务器
   - tag: forward_local
     type: forward
@@ -133,7 +123,7 @@ plugins:
       - exec: jump has_resp_sequence
       - exec: $query_is_local_domain
       - exec: jump has_resp_sequence
-      - exec: $forward_public
+      - exec: $forward_local
       - exec: jump query_modify
       - exec: $forward_openclash
 
