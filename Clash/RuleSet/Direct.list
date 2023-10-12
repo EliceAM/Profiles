@@ -1,29 +1,16 @@
 # Arcaea
 DOMAIN-SUFFIX,lowiro.com
 
-# Torrent
-DOMAIN-KEYWORD,announce
-DOMAIN-KEYWORD,torrent
-DOMAIN-KEYWORD,tracker
+# Mail
+DOMAIN-SUFFIX,hotmail.com
 
 # HNA
 DOMAIN-KEYWORD,hnagroup
 DOMAIN-SUFFIX,hnair.net
 DOMAIN-SUFFIX,hnair.com
 
-# IPV6
-DOMAIN-SUFFIX,test-ipv6.com
-DOMAIN-SUFFIX,icmpcheckv6.popcount.org
-
-# Mail
-DOMAIN-SUFFIX,hotmail.com
-
-# NTP
-DOMAIN-SUFFIX,ntp.tuna.tsinghua.edu.cn
-
-# Qnap
-DOMAIN-KEYWORD,myqnapcloud
-DOMAIN-SUFFIX,qnap.com.cn
+# FXZY
+DOMAIN-SUFFIX,feizhiyi.com
 
 # XGIMI
 DOMAIN-SUFFIX,xgimi.com
