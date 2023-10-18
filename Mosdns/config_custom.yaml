@@ -24,11 +24,13 @@ plugins:
         - "/var/mosdns/geosite_cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
         - "/var/mosdns/geosite_category-games@cn.txt"
-        - "/var/mosdns/geosite_apple-cn.txt"
+        - "/var/mosdns/geosite_apple.txt"
+        - "/var/mosdns/geosite_samsung.txt"
         - "/var/mosdns/geosite_microsoft@cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
         - "/var/mosdns/geosite_ookla-speedtest.txt"
         - "/etc/mosdns/rule/whitelist.txt"
+        - "/etc/mosdns/rule/ddnslist.txt"
   # cloudflare_cidr规则
   - tag: cloudflare_cidr
     type: ip_set
