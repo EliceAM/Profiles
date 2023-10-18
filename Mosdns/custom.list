@@ -12,3 +12,8 @@ keyword:hnagroup
 domain:hnair.net
 domain:hnair.com
 domain:feizhiyi.com
+
+
+# Graylist
+keyword:wiki.
+keyword:.wiki
