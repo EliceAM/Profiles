@@ -1,0 +1,14 @@
+# Whitelist
+domain:hotmail.com
+domain:lowiro.com
+
+#PT
+keyword:tracker
+domain:libtorrent.org
+domain:qbittorrent.org
+
+#HNA
+keyword:hnagroup
+domain:hnair.net
+domain:hnair.com
+domain:feizhiyi.com
