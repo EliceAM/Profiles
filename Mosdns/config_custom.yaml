@@ -16,7 +16,7 @@ plugins:
       files:
         - "/var/mosdns/geosite_gfw.txt"
         - "/etc/mosdns/rule/greylist.txt"
-  # GeoSite direct规则 + OpenWrt luci网页 白名单 规则
+  # GeoSite direct规则 
   - tag: direct_domain
     type: domain_set
     args:
@@ -31,6 +31,12 @@ plugins:
         - "/var/mosdns/geosite_ookla-speedtest.txt"
         - "/etc/mosdns/rule/whitelist.txt"
         - "/etc/mosdns/rule/ddnslist.txt"
+  - tag: direct_domain6
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_bilibili.txt"
+
   # cloudflare_cidr规则
   - tag: cloudflare_cidr
     type: ip_set
@@ -54,36 +60,24 @@ plugins:
       dump_interval: 600
 
   ## > 转发和解析设置
-  # 修改 ttl 
-  - tag: modify_ttl
+  - tag: resp_sequence
+    type: sequence
+    args:
+      - matches: has_resp
+        exec: accept
+  # 修改ttl，并终止有应答的响应
+  - tag: modify_resp
     type: sequence
     args:
       - exec: ttl 3-5
-  # 不是fakeip则修改ttl，并终止有应答的响应
-  - tag: has_resp_sequence
+      - exec: $resp_sequence
+  # 丢弃所有V4响应
+  - tag: drop_v4_resp
     type: sequence
     args:
-      - matches: "!resp_ip 198.18.0.0/16"
-        exec: $modify_ttl
-      - matches: has_resp
-        exec: accept
-
-  # 优选cloudflare_cidr
-  - tag: modify_cf
-    type: sequence
-    args:
-      - exec: black_hole 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
-      - exec: $modify_ttl
-      - exec: accept
-
-  # IP区域分析
-  - tag: query_modify
-    type: sequence
-    args:
-      - matches: "resp_ip $cloudflare_cidr"
-        exec: $modify_cf
-      - matches: "resp_ip $geoip_cn"
-        exec: $has_resp_sequence
+      - matches: "resp_ip 0.0.0.0/0"
+        exec: reject
+      - exec: $modify_resp
 
   # 转发到openclash
   - tag: forward_openclash
@@ -119,6 +113,37 @@ plugins:
     args:
       - matches: "qname $direct_domain"
         exec: $forward_local
+  # 对国内域名进行纯V6解析
+  - tag: query_is_local_domain6
+    type: sequence
+    args:
+      - matches: "qname $direct_domain6"
+        exec: $forward_local
+
+  # fallback 用本地服务器 sequence
+  # 返回非国内 ip 则 drop_resp
+  - tag: query_is_local_ip
+    type: sequence
+    args:
+      - exec: $forward_local
+      - exec: ttl 3-5
+      - matches: "resp_ip $cloudflare_cidr"
+        exec: black_hole 104.26.9.95 2606:4700:e1:0:22:4702:b817:82fc # 请修改为自选 IP
+      - matches: "!resp_ip $geoip_cn"
+        exec: drop_resp
+  # fallback 用远程服务器 sequence
+  - tag: query_is_remote
+    type: sequence
+    args:
+      - exec: $forward_openclash
+  # fallback 用远程服务器 sequence
+  - tag: fallback
+    type: fallback
+    args:
+      primary: query_is_local_ip
+      secondary: query_is_remote
+      threshold: 500
+      always_standby: true
 
   ## > 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
@@ -126,15 +151,15 @@ plugins:
     type: sequence
     args:
       - matches:
-        - "qname $direct_domain"
+        - "qname $direct_domain | $direct_domain6"
         exec: $lazy_cache
       - exec: $query_is_gfw_domain
-      - exec: jump has_resp_sequence
+      - exec: jump resp_sequence
+      - exec: $query_is_local_domain6
+      - exec: jump drop_v4_resp
       - exec: $query_is_local_domain
-      - exec: jump has_resp_sequence
-      - exec: $forward_local
-      - exec: jump query_modify
-      - exec: $forward_openclash
+      - exec: jump modify_resp
+      - exec: $fallback
 
   # 启动 udp 服务器
   - tag: udp_server
