@@ -31,6 +31,12 @@ plugins:
         - "/var/mosdns/geosite_ookla-speedtest.txt"
         - "/etc/mosdns/rule/whitelist.txt"
         - "/etc/mosdns/rule/ddnslist.txt"
+  - tag: direct_domain6
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_bilibili.txt"
+
   # cloudflare_cidr规则
   - tag: cloudflare_cidr
     type: ip_set
@@ -67,7 +73,15 @@ plugins:
         exec: $modify_ttl
       - matches: has_resp
         exec: accept
-
+  # 丢弃V4响应
+  - tag: has_resp_sequence6
+    type: sequence
+    args:
+      - matches: "resp_ip 0.0.0.0/0"
+        exec: reject
+      - exec: $modify_ttl
+      - matches: has_resp
+        exec: accept
   # 优选cloudflare_cidr
   - tag: modify_cf
     type: sequence
@@ -113,6 +127,12 @@ plugins:
     args:
       - matches: "qname $gfw_domain"
         exec: $forward_openclash
+  # 对国内域名进行纯V6解析
+  - tag: query_is_local_domain6
+    type: sequence
+    args:
+      - matches: "qname $direct_domain6"
+        exec: $forward_local
   # 对国内域名进行解析
   - tag: query_is_local_domain
     type: sequence
@@ -126,10 +146,12 @@ plugins:
     type: sequence
     args:
       - matches:
-        - "qname $direct_domain"
+        - "qname  { $direct_domain | $direct_domain6 }"
         exec: $lazy_cache
       - exec: $query_is_gfw_domain
       - exec: jump has_resp_sequence
+      - exec: $query_is_local_domain6
+      - exec: jump has_resp_sequence6
       - exec: $query_is_local_domain
       - exec: jump has_resp_sequence
       - exec: $forward_local
