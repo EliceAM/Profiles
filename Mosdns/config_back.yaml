@@ -36,7 +36,7 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_bilibili.txt"
-
+        
   # cloudflare_cidr规则
   - tag: cloudflare_cidr
     type: ip_set
@@ -82,22 +82,13 @@ plugins:
       - exec: $modify_ttl
       - matches: has_resp
         exec: accept
-  # 优选cloudflare_cidr
-  - tag: modify_cf
-    type: sequence
-    args:
-      - exec: black_hole 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
-      - exec: $modify_ttl
-      - exec: accept
-
-  # IP区域分析
+  # IP优选
   - tag: query_modify
     type: sequence
     args:
       - matches: "resp_ip $cloudflare_cidr"
-        exec: $modify_cf
-      - matches: "resp_ip $geoip_cn"
-        exec: $has_resp_sequence
+        exec: black_hole 2a06:98c1:3121:2080:6267:8f60:7135:c1f7 # 请修改为自选 IP
+      - exec: $modify_ttl
 
   # 转发到openclash
   - tag: forward_openclash
@@ -127,18 +118,36 @@ plugins:
     args:
       - matches: "qname $gfw_domain"
         exec: $forward_openclash
-  # 对国内域名进行纯V6解析
-  - tag: query_is_local_domain6
-    type: sequence
-    args:
-      - matches: "qname $direct_domain6"
-        exec: $forward_local
   # 对国内域名进行解析
   - tag: query_is_local_domain
     type: sequence
     args:
       - matches: "qname $direct_domain"
         exec: $forward_local
+  # 对国内域名进行纯V6解析
+  - tag: query_is_local_domain6
+    type: sequence
+    args:
+      - matches: "qname $direct_domain6"
+        exec: $forward_local
+
+  # fallback 用本地服务器 sequence
+  # 返回非国内 ip 则 drop_resp
+  - tag: query_is_local_ip
+    type: sequence
+    args:
+      - exec: $forward_local
+      - matches: "!resp_ip $geoip_cn $cloudflare_cidr"
+        exec: drop_resp
+      - exec: $query_modify
+  # fallback 用远程服务器 sequence
+  - tag: fallback
+    type: fallback
+    args:
+      primary: query_is_local_ip
+      secondary: forward_openclash
+      threshold: 500
+      always_standby: true
 
   ## > 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
@@ -146,7 +155,7 @@ plugins:
     type: sequence
     args:
       - matches:
-        - "qname  { $direct_domain | $direct_domain6 }"
+        - "qname $direct_domain $direct_domain6"
         exec: $lazy_cache
       - exec: $query_is_gfw_domain
       - exec: jump has_resp_sequence
@@ -154,9 +163,7 @@ plugins:
       - exec: jump has_resp_sequence6
       - exec: $query_is_local_domain
       - exec: jump has_resp_sequence
-      - exec: $forward_local
-      - exec: jump query_modify
-      - exec: $forward_openclash
+      - exec: $fallback
 
   # 启动 udp 服务器
   - tag: udp_server
