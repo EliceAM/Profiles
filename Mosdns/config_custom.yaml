@@ -16,7 +16,7 @@ plugins:
       files:
         - "/var/mosdns/geosite_gfw.txt"
         - "/etc/mosdns/rule/greylist.txt"
-  # GeoSite direct规则 
+  # GeoSite direct规则 + OpenWrt luci网页 白名单 规则
   - tag: direct_domain
     type: domain_set
     args:
@@ -25,18 +25,42 @@ plugins:
         - "/var/mosdns/geosite_tld-cn.txt"
         - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple.txt"
-        - "/var/mosdns/geosite_samsung.txt"
-        - "/var/mosdns/geosite_microsoft@cn.txt"
         - "/var/mosdns/geosite_icloud.txt"
+        - "/var/mosdns/geosite_tencent.txt"
+        - "/var/mosdns/geosite_microsoft@cn.txt"
         - "/var/mosdns/geosite_ookla-speedtest.txt"
         - "/etc/mosdns/rule/whitelist.txt"
-        - "/etc/mosdns/rule/ddnslist.txt"
-  - tag: direct_domain6
+  # DDNS 名单，加入的域名始终使用 "本地 DNS" 进行解析
+  - tag: ddnslist
     type: domain_set
     args:
       files:
-        - "/var/mosdns/geosite_bilibili.txt"
-
+        - "/etc/mosdns/rule/ddnslist.txt"
+        
+  # 黑名单 加入的域名将屏蔽 DNS 解析
+  - tag: blocklist
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/blocklist.txt"
+  # PTR 黑名单 加入的域名将阻止 PTR 请求
+  - tag: local_ptr
+    type: domain_set
+    args:
+      files:
+        - "/etc/mosdns/rule/local-ptr.txt"
+  # 自定义 Hosts 重写
+  - tag: hosts
+    type: hosts
+    args:
+      files:
+        - "/etc/mosdns/rule/hosts.txt"
+  # 重定向请求的域名
+  - tag: redirect
+    type: redirect
+    args:
+      files:
+        - "/etc/mosdns/rule/redirect.txt"
   # cloudflare_cidr规则
   - tag: cloudflare_cidr
     type: ip_set
@@ -51,96 +75,85 @@ plugins:
         - "/var/mosdns/geoip_cn.txt"
 
   ## > 缓存设置
-  - tag: lazy_cache
-    type: cache
-    args:
-      size: 10240
-      lazy_cache_ttl: 259200
-      dump_file: "/etc/mosdns/cache.dump"
-      dump_interval: 600
+  #  - tag: cache
+  #    type: cache
+  #    args:
+  #      size: 10240
+  #      lazy_cache_ttl: 0
+  #      dump_file: "/etc/mosdns/cache.dump"
+  #      dump_interval: 600
 
   ## > 转发和解析设置
-  - tag: resp_sequence
+  # 修改 ttl (默认 0 不修改 ttl)
+  - tag: ttl_sequence
+    type: sequence
+    args:
+      - exec: ttl 10-10
+
+  - tag: modify_ttl
+    type: sequence
+    args:
+      - exec: jump ttl_sequence
+      - exec: accept
+
+  # 有响应终止返回
+  - tag: has_response
     type: sequence
     args:
       - matches: has_resp
-        exec: accept
-  # 修改ttl，并终止有应答的响应
-  - tag: modify_resp
-    type: sequence
-    args:
-      - exec: ttl 3-5
-      - exec: $resp_sequence
-  # 丢弃所有V4响应
-  - tag: drop_v4_resp
-    type: sequence
-    args:
-      - matches: "resp_ip 0.0.0.0/0"
-        exec: reject
-      - exec: $modify_resp
+        exec: goto modify_ttl
 
-  # 转发到openclash
-  - tag: forward_openclash
-    type: sequence
+  # OpenClash 服务器
+  - tag: forward_remote
+    type: forward
     args:
-      - exec: forward 127.0.0.1:7874
-    # 转发到国内DNS服务器
+      concurrent: 1
+      upstreams:
+        - tag: OpenClash
+          addr: udp://127.0.0.1:7874
+  # 国内 DNS 服务器
   - tag: forward_local
     type: forward
     args:
-      concurrent: 3
+      concurrent: 1
       upstreams:
-        - tag: ali_doh3      
-          addr: "https://dns.alidns.com/dns-query"
-          dial_addr: "223.5.5.5"
-          idle_timeout: 30
-          enable_http3: true
-          enable_pipeline: false
-        - tag: dnspod_dot
-          addr: "tls://1.12.12.12:853"
-          idle_timeout: 10
-          enable_pipeline: true
+        - tag: SmartDNS
+          addr: udp://192.168.10.3:3553
       
   # 对gfw域名进行解析
-  - tag: query_is_gfw_domain
+  - tag: remote_resolve_sequence
     type: sequence
     args:
-      - matches: "qname $gfw_domain"
-        exec: $forward_openclash
-  # 对国内域名进行解析
-  - tag: query_is_local_domain
-    type: sequence
-    args:
-      - matches: "qname $direct_domain"
-        exec: $forward_local
-  # 对国内域名进行纯V6解析
-  - tag: query_is_local_domain6
-    type: sequence
-    args:
-      - matches: "qname $direct_domain6"
-        exec: $forward_local
-
-  # fallback 用本地服务器 sequence
-  # 返回非国内 ip 则 drop_resp
-  - tag: query_is_local_ip
+      - exec: $forward_remote
+      - exec: accept
+  # 本地解析处理
+  - tag: local_resolve_sequence
     type: sequence
     args:
       - exec: $forward_local
-      - exec: ttl 3-5
-      - matches: "resp_ip $cloudflare_cidr"
-        exec: black_hole 104.26.9.95 2606:4700:e1:0:22:4702:b817:82fc # 请修改为自选 IP
+      - exec: jump has_response
+
+  # fallback 用本地服务器 sequence 返回非国内 IP 则 drop_resp
+  - tag: query_is_cn_ip
+    type: sequence
+    args:
+      - exec: $forward_local
+  #    - exec: jump ttl_sequence
       - matches: "!resp_ip $geoip_cn"
         exec: drop_resp
+
   # fallback 用远程服务器 sequence
   - tag: query_is_remote
     type: sequence
     args:
-      - exec: $forward_openclash
+      - exec: jump remote_resolve_sequence
+      - exec: reject 3
+
   # fallback 用远程服务器 sequence
   - tag: fallback
     type: fallback
     args:
-      primary: query_is_local_ip
+      primary: query_is_cn_ip
       secondary: query_is_remote
       threshold: 500
       always_standby: true
@@ -150,15 +163,31 @@ plugins:
   - tag: main_sequence
     type: sequence
     args:
-      - matches:
-        - "qname $direct_domain | $direct_domain6"
-        exec: $lazy_cache
-      - exec: $query_is_gfw_domain
-      - exec: jump resp_sequence
-      - exec: $query_is_local_domain6
-      - exec: jump drop_v4_resp
-      - exec: $query_is_local_domain
-      - exec: jump modify_resp
+      - matches: qname $local_ptr $blocklist
+        exec: reject 3
+      - matches: qtype 12
+        exec: reject 3
+      - matches: qtype 65
+        exec: reject 3
+        
+  #    - exec: $hosts
+  #    - matches: has_resp
+  #      exec: accept
+  #    - exec: $redirect
+  #    - matches: has_resp
+  #      exec: accept
+
+  #    - matches: qname $direct_domain
+  #      exec: $cache
+  #    - matches: has_resp
+  #      exec: accept
+        
+      - matches: qname $direct_domain $ddnslist
+        exec: jump local_resolve_sequence
+        
+      - matches: qname $gfw_domain
+        exec: jump remote_resolve_sequence
+
       - exec: $fallback
 
   # 启动 udp 服务器
@@ -166,4 +195,4 @@ plugins:
     type: udp_server
     args:
       entry: main_sequence
-      listen: ":5335"
+      listen: ":5353"
