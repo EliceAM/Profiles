@@ -5,9 +5,10 @@ log:
 # API 入口设置
 api:
   http: "0.0.0.0:9091"
-include: []
-plugins:
 
+include: []
+
+plugins:
   ## > 外部资源
   # GeoSite gfw规则 + OpenWrt luci 网页 灰名单 规则
   - tag: gfw_domain
@@ -15,7 +16,9 @@ plugins:
     args:
       files:
         - "/var/mosdns/geosite_gfw.txt"
-        - "/etc/mosdns/rule/greylist.txt"
+        - "/var/mosdns/geosite_google.txt"
+        - "/var/mosdns/geosite_geolocation-!cn.txt"     
+        - "/etc/mosdns/rule/greylist.txt"        
   # GeoSite direct规则 + OpenWrt luci网页 白名单 规则
   - tag: direct_domain
     type: domain_set
@@ -23,20 +26,17 @@ plugins:
       files:
         - "/var/mosdns/geosite_cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
-        - "/var/mosdns/geosite_category-games@cn.txt"
         - "/var/mosdns/geosite_apple.txt"
         - "/var/mosdns/geosite_icloud.txt"
         - "/var/mosdns/geosite_tencent.txt"
         - "/var/mosdns/geosite_microsoft@cn.txt"
-        - "/var/mosdns/geosite_ookla-speedtest.txt"
         - "/etc/mosdns/rule/whitelist.txt"
   # DDNS 名单，加入的域名始终使用 "本地 DNS" 进行解析
   - tag: ddnslist
     type: domain_set
     args:
       files:
-        - "/etc/mosdns/rule/ddnslist.txt"
-        
+        - "/etc/mosdns/rule/ddnslist.txt"        
   # 黑名单 加入的域名将屏蔽 DNS 解析
   - tag: blocklist
     type: domain_set
@@ -61,12 +61,6 @@ plugins:
     args:
       files:
         - "/etc/mosdns/rule/redirect.txt"
-  # cloudflare_cidr规则
-  - tag: cloudflare_cidr
-    type: ip_set
-    args:
-      files:
-        - "/etc/mosdns/rule/cloudflare-cidr.txt"
   # 国内ip
   - tag: geoip_cn
     type: ip_set
@@ -74,120 +68,88 @@ plugins:
       files:
         - "/var/mosdns/geoip_cn.txt"
 
-  ## > 缓存设置
-  #  - tag: cache
-  #    type: cache
-  #    args:
-  #      size: 10240
-  #      lazy_cache_ttl: 0
-  #      dump_file: "/etc/mosdns/cache.dump"
-  #      dump_interval: 600
 
-  ## > 转发和解析设置
-  # 修改 ttl (默认 0 不修改 ttl)
-  - tag: ttl_sequence
+  # 国内解析
+  - tag: forward_local
     type: sequence
     args:
-      - exec: ttl 10-10
+      - exec: forward 192.168.10.3:3553
+  # 国外解析
+  - tag: forward_remote_upstream
+    type: sequence
+    args:
+      - exec: forward 127.0.0.1:7874
 
+
+  # 修改ttl（默认0 不修改ttl）
   - tag: modify_ttl
     type: sequence
     args:
-      - exec: jump ttl_sequence
+      - exec: ttl 1-1
       - exec: accept
-
-  # 有响应终止返回
-  - tag: has_response
+  # 有响应则修改 TTL 并终止返回
+  - tag: has_resp_sequence
     type: sequence
     args:
       - matches: has_resp
-        exec: goto modify_ttl
+        exec: $modify_ttl
 
-  # OpenClash 服务器
-  - tag: forward_remote
-    type: forward
-    args:
-      concurrent: 1
-      upstreams:
-        - tag: OpenClash
-          addr: udp://127.0.0.1:7874
-  # 国内 DNS 服务器
-  - tag: forward_local
-    type: forward
-    args:
-      concurrent: 1
-      upstreams:
-        - tag: SmartDNS
-          addr: udp://192.168.10.3:3553
-      
-  # 对gfw域名进行解析
-  - tag: remote_resolve_sequence
-    type: sequence
-    args:
-      - exec: $forward_remote
-      - exec: accept
-  # 本地解析处理
-  - tag: local_resolve_sequence
+
+  # fallback 用本地服务器 sequence
+  # 返回非国内 ip 则 drop_resp
+  - tag: query_is_non_local_ip
     type: sequence
     args:
       - exec: $forward_local
-      - exec: jump has_response
-
-  # fallback 用本地服务器 sequence 返回非国内 IP 则 drop_resp
-  - tag: query_is_cn_ip
-    type: sequence
-    args:
-      - exec: $forward_local
-  #    - exec: jump ttl_sequence
       - matches: "!resp_ip $geoip_cn"
         exec: drop_resp
-
-  # fallback 用远程服务器 sequence
-  - tag: query_is_remote
-    type: sequence
-    args:
-      - exec: jump remote_resolve_sequence
-      - exec: reject 3
-
   # fallback 用远程服务器 sequence
   - tag: fallback
     type: fallback
     args:
-      primary: query_is_cn_ip
-      secondary: query_is_remote
+      primary: query_is_non_local_ip
+      secondary: forward_remote_upstream
       threshold: 500
       always_standby: true
 
-  ## > 主要的运行逻辑插件
-  # sequence 插件中调用的插件 tag 必须在 sequence 前定义，否则 sequence 找不到对应插件。
-  - tag: main_sequence
+
+  # 拒绝名单
+  - tag: query_is_reject_domain
     type: sequence
     args:
-      - matches: qname $local_ptr $blocklist
+      - matches: qname $blocklist
         exec: reject 3
-      - matches: qtype 12
+      - matches:
+        - qtype 12
+        - qname $local_ptr
         exec: reject 3
       - matches: qtype 65
         exec: reject 3
-        
-  #    - exec: $hosts
-  #    - matches: has_resp
-  #      exec: accept
-  #    - exec: $redirect
-  #    - matches: has_resp
-  #      exec: accept
-
-  #    - matches: qname $direct_domain
-  #      exec: $cache
-  #    - matches: has_resp
-  #      exec: accept
-        
+  # 查询国内域名
+  - tag: query_is_local_domain
+    type: sequence
+    args:
       - matches: qname $direct_domain $ddnslist
-        exec: jump local_resolve_sequence
-        
+        exec: $forward_local
+  # 查询国外域名
+  - tag: query_is_no_local_domain
+    type: sequence
+    args:
       - matches: qname $gfw_domain
-        exec: jump remote_resolve_sequence
+        exec: $forward_remote_upstream
 
+  # 主要的运行逻辑插件
+  # sequence 插件中调用的插件 tag 必须在 sequence 前定义，
+  # 否则 sequence 找不到对应插件。
+  - tag: main_sequence
+    type: sequence
+    args:
+      - exec: $query_is_reject_domain
+      - exec: jump has_resp_sequence
+      - exec: $query_is_local_domain
+      - exec: jump has_resp_sequence
+      - exec: $query_is_no_local_domain
+      - exec: jump has_resp_sequence
       - exec: $fallback
 
   # 启动 udp 服务器
