@@ -1,28 +1,16 @@
 log:
-  level: info
-  file: "/tmp/mosdns.log"
+  level: warn
+  file: "./mosdns.log"
 
-# API 入口设置
-api:
-  http: "0.0.0.0:9091"
-
-include: []
-
-plugins:
-  ## > 外部资源
-  # GeoSite gfw规则 + OpenWrt luci 网页 灰名单 规则
-  - tag: gfw_domain
+plugins:     
+  # 国内域名
+  - tag: geosite_cn
     type: domain_set
     args:
-      files:
-        - "/var/mosdns/geosite_gfw.txt"
-        - "/var/mosdns/geosite_google.txt"
-        - "/var/mosdns/geosite_geolocation-!cn.txt"     
-        - "/etc/mosdns/rule/greylist.txt"        
-  # GeoSite direct规则 + OpenWrt luci网页 白名单 规则
-  - tag: direct_domain
-    type: domain_set
-    args:
+      exps:
+        - "lan"
+        - "local"
+        - "arpa"
       files:
         - "/var/mosdns/geosite_cn.txt"
         - "/var/mosdns/geosite_tld-cn.txt"
@@ -31,112 +19,112 @@ plugins:
         - "/var/mosdns/geosite_tencent.txt"
         - "/var/mosdns/geosite_microsoft@cn.txt"
         - "/etc/mosdns/rule/whitelist.txt"
-  # DDNS 名单，加入的域名始终使用 "本地 DNS" 进行解析
-  - tag: ddnslist
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/ddnslist.txt"        
-  # 黑名单 加入的域名将屏蔽 DNS 解析
-  - tag: blocklist
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/blocklist.txt"
-  # PTR 黑名单 加入的域名将阻止 PTR 请求
-  - tag: local_ptr
-    type: domain_set
-    args:
-      files:
-        - "/etc/mosdns/rule/local-ptr.txt"
-  # 自定义 Hosts 重写
-  - tag: hosts
-    type: hosts
-    args:
-      files:
-        - "/etc/mosdns/rule/hosts.txt"
-  # 重定向请求的域名
-  - tag: redirect
-    type: redirect
-    args:
-      files:
-        - "/etc/mosdns/rule/redirect.txt"
-  # 国内ip
+
+  # 国内 IP
   - tag: geoip_cn
     type: ip_set
     args:
-      files:
+     files:
         - "/var/mosdns/geoip_cn.txt"
 
+        
+  # 国外域名
+  - tag: geosite_no_cn
+    type: domain_set
+    args:
+      files:
+        - "/var/mosdns/geosite_gfw.txt"
+        - "/var/mosdns/geosite_google.txt"
+        - "/etc/mosdns/rule/greylist.txt"     
+        
+  # 国外DNS
+  # 自己查找低延迟DNS
+  - tag: forward_remote
+    type: forward
+    args:
+      upstreams:
+        # 101DNS
+        - addr: "tls://101.101.101.101"
+          enable_pipeline: true
+        # NextDNS HK节点
+        - addr: "https://45.11.104.186"
+          insecure_skip_verify: true
+        # OpenDNS SANDNOX
+        - addr: "tls://208.67.222.2"
+          enable_pipeline: true
+        # OpenDNS 
+        - addr: "tls://208.67.222.222"
+          enable_pipeline: true                    
 
+  # 私人分流dns         
+  - tag: forward_private
+    type: forward
+    args:
+      upstreams: 
+        - addr: "https://doh.apad.pro/dns-query"
+          bootstrap: "223.5.5.5" 
+          
   # 国内解析
-  - tag: forward_local
+  - tag: local_sequence
     type: sequence
     args:
       - exec: forward 192.168.10.3:3553
+      - exec: ttl 10-10
+        
   # 国外解析
-  - tag: forward_remote_upstream
+  - tag: remote_sequence
+    type: sequence
+    args:
+      - exec: prefer_ipv4
+      - exec: $forward_remote
+      
+  # 分流解析    
+  - tag: private_sequence
+    type: sequence
+    args:
+      - exec: $forward_private
+      
+  # clash解析
+  - tag: clash_sequence
     type: sequence
     args:
       - exec: forward 127.0.0.1:7874
-
-
-  # 修改ttl（默认0 不修改ttl）
-  - tag: modify_ttl
-    type: sequence
-    args:
       - exec: ttl 1-1
-      - exec: accept
-  # 有响应则修改 TTL 并终止返回
+
+  # 有响应终止返回
   - tag: has_resp_sequence
     type: sequence
     args:
       - matches: has_resp
-        exec: $modify_ttl
+        exec: accept
 
-
-  # fallback 用本地服务器 sequence
-  # 返回非国内 ip 则 drop_resp
-  - tag: query_is_non_local_ip
+  # fallback 用分流 sequence
+  # 返回国外IP则用clash解析得出fakeip
+  - tag: fallback_sequence
     type: sequence
     args:
-      - exec: $forward_local
+      - exec: $private_sequence
       - matches: "!resp_ip $geoip_cn"
-        exec: drop_resp
-  # fallback 用远程服务器 sequence
+        exec: goto clash_sequence
+      - exec: accept
+      
+  # 国外sequence
+  - tag: fallback2_sequence
+    type: sequence
+    args:
+      - exec: $remote_sequence
+      - matches: "resp_ip $geoip_cn"
+        exec: goto local_sequence
+      - exec: goto clash_sequence      
+
+  # fallback 用分流DNS，超时后用国外DNS解析    
   - tag: fallback
     type: fallback
     args:
-      primary: query_is_non_local_ip
-      secondary: forward_remote_upstream
-      threshold: 500
+      primary: fallback_sequence
+      secondary: fallback2_sequence
+      threshold: 2000
       always_standby: true
-
-
-  # 拒绝名单
-  - tag: query_is_reject_domain
-    type: sequence
-    args:
-      - matches: qname $blocklist
-        exec: reject 3
-      - matches:
-        - qtype 12
-        - qname $local_ptr
-        exec: reject 3
-      - matches: qtype 65
-        exec: reject 3
-  # 查询国内域名
-  - tag: query_is_local_domain
-    type: sequence
-    args:
-      - matches: qname $direct_domain $ddnslist
-        exec: $forward_local
-  # 查询国外域名
-  - tag: query_is_no_local_domain
-    type: sequence
-    args:
-      - matches: qname $gfw_domain
-        exec: $forward_remote_upstream
 
   # 主要的运行逻辑插件
   # sequence 插件中调用的插件 tag 必须在 sequence 前定义，
@@ -144,17 +132,32 @@ plugins:
   - tag: main_sequence
     type: sequence
     args:
-      - exec: $query_is_reject_domain
+      # drop https query type
+      - matches:
+        - qtype 65
+        exec: reject 3
+
+      # handle local ptr
+      - matches:
+        - qtype 12
+        exec: $local_sequence
       - exec: jump has_resp_sequence
-      - exec: $query_is_local_domain
+
+      #FakeIP
+      - matches:
+        - qname $geosite_no_cn
+        exec: $clash_sequence
       - exec: jump has_resp_sequence
-      - exec: $query_is_no_local_domain
+      
+      - matches:
+        - qname $geosite_cn
+        exec: $local_sequence
       - exec: jump has_resp_sequence
+
       - exec: $fallback
 
-  # 启动 udp 服务器
   - tag: udp_server
     type: udp_server
     args:
       entry: main_sequence
-      listen: ":5353"
+      listen: ":5353" #mosdns监听端口
