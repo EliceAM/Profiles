@@ -15,11 +15,6 @@ DOMAIN-SUFFIX,cp.cloudflare.com
 DOMAIN-SUFFIX,docker.com
 DOMAIN-SUFFIX,docker.io
 
-
-#  Iwara
-DOMAIN-SUFFIX,iwara.tv
-DOMAIN-SUFFIX,ingest.sentry.io
-
 # Media info
 DOMAIN-SUFFIX,tmdb.org
 DOMAIN-SUFFIX,themoviedb.org
@@ -41,5 +36,5 @@ DOMAIN-KEYWORD,.wiki
 # The Others
 DOMAIN-SUFFIX,nyaa.si
 DOMAIN-SUFFIX,gmgard.com
-DOMAIN-KEYWORD,-plus
 DOMAIN-KEYWORD,zodgame
+DOMAIN-KEYWORD,ipv6boy
