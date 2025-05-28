@@ -25,7 +25,7 @@ MODIFIED=false
 
 # 遍历每个配置文件，检查是否需要修改
 for TARGET_FILE in $TARGET_FILES; do
-    if grep -q "type: fallback" "$TARGET_FILE"; then
+    if grep -q "type: load-balance" "$TARGET_FILE"; then
         echo "[$(date '+%F %T')] '$TARGET_FILE' 需要修改。"
         MODIFIED=true
     else
@@ -40,9 +40,9 @@ if [ "$MODIFIED" = true ]; then
     sleep 5
 
     for TARGET_FILE in $TARGET_FILES; do
-        if grep -q "type: fallback" "$TARGET_FILE"; then
+        if grep -q "type: load-balance" "$TARGET_FILE"; then
             echo "[$(date '+%F %T')] 修改 '$TARGET_FILE'。"
-            sed -i 's/type: fallback/type: smart/g' "$TARGET_FILE"
+            sed -i 's/type: load-balance/type: smart/g' "$TARGET_FILE"
         fi
     done
 
