@@ -1,163 +1,119 @@
 log:
-  level: warn
-  file: "./mosdns.log"
+  level: info
+  file: "/tmp/mosdns.log"
 
-plugins:     
-  # 国内域名
+plugins:
+  ################## 数据源 ##################
+  - tag: whitelist
+    type: domain_set
+    args:
+      files:
+        - /etc/mosdns/rule/whitelist.txt
+        - /etc/mosdns/rule/ddnslist.txt
+        - /var/mosdns/geosite_tencent.txt
+        - /var/mosdns/geosite_apple.txt
+        - /var/mosdns/geosite_microsoft@cn.txt
+        
   - tag: geosite_cn
     type: domain_set
     args:
-      exps:
-        - "lan"
-        - "local"
-        - "arpa"
       files:
-        - "/var/mosdns/geosite_cn.txt"
-        - "/var/mosdns/geosite_tld-cn.txt"
-        - "/var/mosdns/geosite_apple.txt"
-        - "/var/mosdns/geosite_icloud.txt"
-        - "/var/mosdns/geosite_tencent.txt"
-        - "/var/mosdns/geosite_microsoft@cn.txt"
-        - "/etc/mosdns/rule/whitelist.txt"
+        - /var/mosdns/geosite_cn.txt
+        - /var/mosdns/geosite_tld-cn.txt
 
-  # 国内 IP
-  - tag: geoip_cn
-    type: ip_set
-    args:
-     files:
-        - "/var/mosdns/geoip_cn.txt"
-
-        
-  # 国外域名
   - tag: geosite_no_cn
     type: domain_set
     args:
       files:
-        - "/var/mosdns/geosite_gfw.txt"
-        - "/var/mosdns/geosite_google.txt"
-        - "/etc/mosdns/rule/greylist.txt"     
-        
-  # 国外DNS
-  # 自己查找低延迟DNS
-  - tag: forward_remote
-    type: forward
-    args:
-      upstreams:
-        # 101DNS
-        - addr: "tls://101.101.101.101"
-          enable_pipeline: true
-        # NextDNS HK节点
-        - addr: "https://45.11.104.186"
-          insecure_skip_verify: true
-        # OpenDNS SANDNOX
-        - addr: "tls://208.67.222.2"
-          enable_pipeline: true
-        # OpenDNS 
-        - addr: "tls://208.67.222.222"
-          enable_pipeline: true                    
+        - /etc/mosdns/rule/greylist.txt
+        - /var/mosdns/geosite_gfw.txt
+        - /var/mosdns/geosite_google.txt
+        - /var/mosdns/geosite_steam.txt
 
-  # 私人分流dns         
-  - tag: forward_private
-    type: forward
+  - tag: geoip_cn
+    type: ip_set
     args:
-      upstreams: 
-        - addr: "https://doh.apad.pro/dns-query"
-          bootstrap: "223.5.5.5" 
-          
-  # 国内解析
-  - tag: local_sequence
+      files:
+        - /var/mosdns/geoip_cn.txt
+
+  ################## 逻辑执行序列 ##################
+  
+  #纯净国内转发 (SmartDNS)
+  - tag: local_forward
     type: sequence
     args:
-      - exec: forward 192.168.10.3:3553
-      - exec: ttl 10-10
-        
-  # 国外解析
-  - tag: remote_sequence
+      - exec: forward udp://192.168.10.3:5353
+      - exec: ttl 5-5
+
+  #Clash 转发 (Fake-IP)
+  - tag: clash_forward
     type: sequence
     args:
       - exec: prefer_ipv4
-      - exec: $forward_remote
-      
-  # 分流解析    
-  - tag: private_sequence
-    type: sequence
-    args:
-      - exec: $forward_private
-      
-  # clash解析
-  - tag: clash_sequence
-    type: sequence
-    args:
-      - exec: forward 127.0.0.1:7874
+      - exec: forward udp://127.0.0.1:7874
       - exec: ttl 1-1
 
-  # 有响应终止返回
-  - tag: has_resp_sequence
+  # fallback的primary服务器, 返回国内ip则accept, 返回非国内ip则drop
+  - tag: local_sequence
     type: sequence
     args:
-      - matches: has_resp
+      - exec: $local_forward
+      - matches: resp_ip $geoip_cn
         exec: accept
+      - exec: drop_resp
 
-  # fallback 用分流 sequence
-  # 返回国外IP则用clash解析得出fakeip
-  - tag: fallback_sequence
+  # fallback的secondary服务器, 返回非国内ip则添加至ipset, 返回国内ip只接受不会添加ipset
+  - tag: remote_sequence
     type: sequence
     args:
-      - exec: $private_sequence
-      - matches: "!resp_ip $geoip_cn"
-        exec: goto clash_sequence
+      - exec: $clash_forward
       - exec: accept
-      
-  # 国外sequence
-  - tag: fallback2_sequence
-    type: sequence
-    args:
-      - exec: $remote_sequence
-      - matches: "resp_ip $geoip_cn"
-        exec: goto local_sequence
-      - exec: goto clash_sequence      
 
-  # fallback 用分流DNS，超时后用国外DNS解析    
+  # fallback sequence
   - tag: fallback
     type: fallback
     args:
-      primary: fallback_sequence
-      secondary: fallback2_sequence
-      threshold: 2000
+      primary: local_sequence
+      secondary: remote_sequence
+      threshold: 500
       always_standby: true
 
-  # 主要的运行逻辑插件
-  # sequence 插件中调用的插件 tag 必须在 sequence 前定义，
-  # 否则 sequence 找不到对应插件。
+
+  ################## 主运行逻辑 ##################
+
   - tag: main_sequence
     type: sequence
     args:
-      # drop https query type
-      - matches:
-        - qtype 65
+    
+      # 屏蔽PTR和DNSSEC，解决ios系统的一些问题
+      - matches: qtype 12 65
+        exec: reject 0  
+      - matches: "qname keyword::" # 无效域名
         exec: reject 3
+        
+      - matches: 
+          - qname $whitelist
+        exec: $local_forward
+      - matches: has_resp
+        exec: accept
+        
+      - matches: 
+          - qname $geosite_no_cn
+        exec: $clash_forward
+      - matches: has_resp
+        exec: accept
 
-      # handle local ptr
-      - matches:
-        - qtype 12
-        exec: $local_sequence
-      - exec: jump has_resp_sequence
-
-      #FakeIP
-      - matches:
-        - qname $geosite_no_cn
-        exec: $clash_sequence
-      - exec: jump has_resp_sequence
-      
-      - matches:
-        - qname $geosite_cn
-        exec: $local_sequence
-      - exec: jump has_resp_sequence
+      - matches: 
+          - qname $geosite_cn
+        exec: $local_forward
+      - matches: has_resp
+        exec: accept
 
       - exec: $fallback
 
+  ################## 入口服务 ##################
   - tag: udp_server
     type: udp_server
     args:
       entry: main_sequence
-      listen: ":5353" #mosdns监听端口
+      listen: :5353
