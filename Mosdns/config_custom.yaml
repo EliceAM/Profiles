@@ -1,48 +1,46 @@
 log:
   level: info
-  file: "/tmp/mosdns.log"
-
+  file: "/var/log/mosdns.log"
+  
 plugins:
   ################## 数据源 ##################
-  - tag: whitelist
-    type: domain_set
-    args:
-      files:
-        - /etc/mosdns/rule/whitelist.txt
-        - /etc/mosdns/rule/ddnslist.txt
-        - /var/mosdns/geosite_tencent.txt
-        - /var/mosdns/geosite_apple.txt
-        - /var/mosdns/geosite_microsoft@cn.txt
+
+#  - tag: streaminglist
+#    type: domain_set
+#    args:
+#      files:
+#        - /etc/mosdns/rule/streaming.txt
         
   - tag: geosite_cn
     type: domain_set
     args:
       files:
-        - /var/mosdns/geosite_cn.txt
+        - /etc/mosdns/rule/whitelist.txt
         - /var/mosdns/geosite_tld-cn.txt
-
+        - /var/mosdns/geosite_cn.txt
+        - /var/mosdns/geosite_apple.txt
+        - /var/mosdns/geosite_microsoft@cn.txt
+        - /var/mosdns/geosite_category-games@cn.txt
+        
   - tag: geosite_no_cn
     type: domain_set
     args:
       files:
         - /etc/mosdns/rule/greylist.txt
-        - /var/mosdns/geosite_gfw.txt
-        - /var/mosdns/geosite_google.txt
-        - /var/mosdns/geosite_steam.txt
-
+        - /var/mosdns/geosite_geolocation-!cn.txt
   - tag: geoip_cn
     type: ip_set
     args:
       files:
         - /var/mosdns/geoip_cn.txt
-
+ 
   ################## 逻辑执行序列 ##################
-  
+
   #纯净国内转发 (SmartDNS)
   - tag: local_forward
     type: sequence
     args:
-      - exec: forward udp://192.168.10.3:5353
+      - exec: forward udp://192.168.10.3:6353
       - exec: ttl 5-5
 
   #Clash 转发 (Fake-IP)
@@ -62,11 +60,12 @@ plugins:
         exec: accept
       - exec: drop_resp
 
-  # fallback的secondary服务器, 返回非国内ip则添加至ipset, 返回国内ip只接受不会添加ipset
+  # fallback的secondary服务器
   - tag: remote_sequence
     type: sequence
     args:
       - exec: $clash_forward
+      - exec: query_summary "HIT_FAKEIP"
       - exec: accept
 
   # fallback sequence
@@ -75,37 +74,24 @@ plugins:
     args:
       primary: local_sequence
       secondary: remote_sequence
-      threshold: 500
-      always_standby: true
-
+      threshold: 400
+      always_standby: false
 
   ################## 主运行逻辑 ##################
 
   - tag: main_sequence
     type: sequence
     args:
-    
-      # 屏蔽PTR和DNSSEC，解决ios系统的一些问题
-      - matches: qtype 12 65
-        exec: reject 0  
-      - matches: "qname keyword::" # 无效域名
-        exec: reject 3
-        
-      - matches: 
-          - qname $whitelist
-        exec: $local_forward
-      - matches: has_resp
-        exec: accept
-        
-      - matches: 
-          - qname $geosite_no_cn
-        exec: $clash_forward
-      - matches: has_resp
-        exec: accept
 
       - matches: 
           - qname $geosite_cn
         exec: $local_forward
+      - matches: has_resp
+        exec: accept
+
+      - matches: 
+          - qname $geosite_no_cn
+        exec: $clash_forward
       - matches: has_resp
         exec: accept
 
@@ -116,4 +102,4 @@ plugins:
     type: udp_server
     args:
       entry: main_sequence
-      listen: :5353
+      listen: :6353
