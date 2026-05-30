@@ -5,22 +5,24 @@ log:
 plugins:
   ################## 数据源 ##################
 
-#  - tag: streaminglist
-#    type: domain_set
-#    args:
-#      files:
-#        - /etc/mosdns/rule/streaming.txt
+  - tag: geosite_lan
+    type: domain_set
+    args:
+      files:
+        - /var/mosdns/geosite_private.txt
         
   - tag: geosite_cn
     type: domain_set
     args:
       files:
         - /etc/mosdns/rule/whitelist.txt
+        - /etc/mosdns/rule/ddnslist.txt
         - /var/mosdns/geosite_tld-cn.txt
+        - /var/mosdns/geosite_cloudflare-cn.txt
         - /var/mosdns/geosite_cn.txt
         - /var/mosdns/geosite_apple.txt
         - /var/mosdns/geosite_microsoft@cn.txt
-        - /var/mosdns/geosite_category-games@cn.txt
+        - /var/mosdns/geosite_akamai@cn.txt
         
   - tag: geosite_no_cn
     type: domain_set
@@ -28,52 +30,51 @@ plugins:
       files:
         - /etc/mosdns/rule/greylist.txt
         - /var/mosdns/geosite_geolocation-!cn.txt
+        
   - tag: geoip_cn
     type: ip_set
     args:
       files:
         - /var/mosdns/geoip_cn.txt
- 
+        
   ################## 逻辑执行序列 ##################
 
-  #纯净国内转发 (SmartDNS)
+  # 国内转发 (SmartDNS)
   - tag: local_forward
     type: sequence
     args:
-      - exec: forward udp://192.168.10.3:6353
+      - exec: forward 192.168.10.3:6353
       - exec: ttl 5-5
-
-  #Clash 转发 (Fake-IP)
+  
+  # Fake-IP转发 (Clash)
   - tag: clash_forward
     type: sequence
     args:
       - exec: prefer_ipv4
-      - exec: forward udp://127.0.0.1:7874
+      - exec: forward 127.0.0.1:7874
       - exec: ttl 1-1
 
   # fallback的primary服务器, 返回国内ip则accept, 返回非国内ip则drop
-  - tag: local_sequence
+  - tag: primary_sequence
     type: sequence
     args:
       - exec: $local_forward
       - matches: resp_ip $geoip_cn
         exec: accept
       - exec: drop_resp
-
   # fallback的secondary服务器
-  - tag: remote_sequence
+  - tag: secondary_sequence
     type: sequence
     args:
       - exec: $clash_forward
       - exec: query_summary "HIT_FAKEIP"
-      - exec: accept
-
+ 
   # fallback sequence
   - tag: fallback
     type: fallback
     args:
-      primary: local_sequence
-      secondary: remote_sequence
+      primary: primary_sequence
+      secondary: secondary_sequence
       threshold: 400
       always_standby: false
 
@@ -82,21 +83,21 @@ plugins:
   - tag: main_sequence
     type: sequence
     args:
-
+      - matches: 
+          - qname $geosite_lan
+        exec: reject 5
+        
       - matches: 
           - qname $geosite_cn
-        exec: $local_forward
-      - matches: has_resp
-        exec: accept
-
+        exec: goto local_forward
+        
       - matches: 
           - qname $geosite_no_cn
-        exec: $clash_forward
-      - matches: has_resp
-        exec: accept
+        exec: goto clash_forward
 
       - exec: $fallback
-
+      - exec: query_summary "LEAK"
+      
   ################## 入口服务 ##################
   - tag: udp_server
     type: udp_server
